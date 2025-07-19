@@ -1,0 +1,2587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XaioninAI - Your Virtual Assistant</title>
+    <!-- Tailwind CSS CDN for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base CSS variables for theming */
+        :root {
+            --bg-color-1: #e0f2f7;
+            --bg-color-2: #c8e6f1;
+            --text-color-primary: #2c3e50;
+            --header-gradient-start: #6a82fb;
+            --header-gradient-end: #fc5c7d;
+            --chat-bg-color: rgba(255, 255, 255, 0.98);
+            --chat-border-color: rgba(255, 255, 255, 0.5);
+            --user-bubble-gradient-start: #84fab0;
+            --user-bubble-gradient-end: #8fd3f4;
+            --bot-bubble-gradient-start: #a1c4fd;
+            --bot-bubble-gradient-end: #c2e9fb;
+            --input-bg-color: #f9fbfd;
+            --input-border-color: #dbe6ee;
+            --input-focus-ring: rgba(106, 130, 251, 0.2);
+            --button-gradient-start: #6A82FB;
+            --button-gradient-end: #FC5C7D;
+            --loading-bg: rgba(44, 62, 80, 0.8);
+            --message-box-bg: white;
+            --message-box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+            --footer-bg: #1a202c; /* dark gray */
+            --header-text-shadow: none;
+            --font-family-main: 'Inter', sans-serif;
+            --sidebar-bg: #f0f4f8; /* Light background for sidebar */
+            --sidebar-border: #dbe6ee; /* Light border for sidebar */
+            --sidebar-item-hover: #e0e7ed; /* Hover effect for sidebar items */
+            --sidebar-item-active: #c8e6f1; /* Active item in sidebar */
+        }
+
+        /* Professional Theme (Gemini-like) - NEW DEFAULT */
+        .theme-professional {
+            --bg-color-1: #f8f9fa; /* Very light grey */
+            --bg-color-2: #e9ecef; /* Slightly darker cool grey */
+            --text-color-primary: #343a40; /* Dark charcoal */
+            --header-gradient-start: #4285f4; /* Google Blue */
+            --header-gradient-end: #3367d6; /* Slightly darker Google Blue */
+            --chat-bg-color: #ffffff; /* White chat background */
+            --chat-border-color: #dee2e6; /* Light grey border */
+            --user-bubble-gradient-start: #e0f2f7; /* Light blue-grey */
+            --user-bubble-gradient-end: #d1e5f0; /* Slightly darker blue-grey */
+            --bot-bubble-gradient-start: #f1f3f4; /* Very light grey */
+            --bot-bubble-gradient-end: #ffffff; /* White */
+            --input-bg-color: #ffffff; /* White input background */
+            --input-border-color: #ced4da; /* Medium grey border */
+            --input-focus-ring: rgba(66, 133, 244, 0.25); /* Google Blue focus ring */
+            --button-gradient-start: #4285f4; /* Google Blue */
+            --button-gradient-end: #3367d6; /* Slightly darker Google Blue */
+            --loading-bg: rgba(52, 58, 64, 0.8); /* Dark grey with transparency */
+            --message-box-bg: #ffffff; /* White message box */
+            --message-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            --footer-bg: #212529; /* Dark blue-grey */
+            --header-text-shadow: none;
+            --sidebar-bg: #f0f3f6; /* Very light blue-grey */
+            --sidebar-border: #e0e4e8; /* Light grey border */
+            --sidebar-item-hover: #e8ebef; /* Slightly darker hover */
+            --sidebar-item-active: #dce0e6; /* Active item */
+        }
+
+
+        /* Other themes (kept for reference but not directly used in default UI) */
+        .theme-simple {
+            --bg-color-1: #f0f4f8;
+            --bg-color-2: #e0e7ed;
+            --text-color-primary: #334155;
+            --header-gradient-start: #4a69bd;
+            --header-gradient-end: #6a82fb;
+            --chat-bg-color: rgba(255, 255, 255, 0.95);
+            --chat-border-color: rgba(226, 232, 240, 0.5);
+            --user-bubble-gradient-start: #a7f3d0;
+            --user-bubble-gradient-end: #93c5fd;
+            --bot-bubble-gradient-start: #bfdbfe;
+            --bot-bubble-gradient-end: #d1e5ff;
+            --input-bg-color: #ffffff;
+            --input-border-color: #cbd5e1;
+            --input-focus-ring: rgba(74, 105, 189, 0.2);
+            --button-gradient-start: #4a69bd;
+            --button-gradient-end: #6a82fb;
+            --loading-bg: rgba(51, 65, 85, 0.8);
+            --message-box-bg: white;
+            --message-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            --footer-bg: #2d3748; /* slightly lighter dark gray */
+            --sidebar-bg: #e0e7ed;
+            --sidebar-border: #cbd5e1;
+            --sidebar-item-hover: #d1d9e0;
+            --sidebar-item-active: #c2cad1;
+        }
+
+        .theme-neon {
+            --bg-color-1: #0a0a1a;
+            --bg-color-2: #000000;
+            --text-color-primary: #e0f7fa;
+            --header-gradient-start: #8a2be2; /* Blue Violet */
+            --header-gradient-end: #ff00ff; /* Magenta */
+            --chat-bg-color: rgba(10, 10, 26, 0.95);
+            --chat-border-color: rgba(138, 43, 226, 0.3);
+            --user-bubble-gradient-start: #00ffff; /* Cyan */
+            --user-bubble-gradient-end: #00ff80; /* Spring Green */
+            --bot-bubble-gradient-start: #ff00ff; /* Magenta */
+            --bot-bubble-gradient-end: #ffff00; /* Yellow */
+            --input-bg-color: #1a1a33;
+            --input-border-color: #8a2be2;
+            --input-focus-ring: rgba(0, 255, 255, 0.3);
+            --button-gradient-start: #00ffff;
+            --button-gradient-end: #ff00ff;
+            --loading-bg: rgba(0, 255, 255, 0.7);
+            --message-box-bg: #1a1a33;
+            --message-box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
+            --footer-bg: #05050f;
+            --header-text-shadow: 0 0 10px #00ffff, 0 0 20px #ff00ff;
+            --sidebar-bg: #050510;
+            --sidebar-border: #8a2be2;
+            --sidebar-item-hover: #1a1a33;
+            --sidebar-item-active: #00ffff; /* Active item neon glow */
+        }
+
+        .theme-cultural {
+            --bg-color-1: #e6ffe6; /* Very light green */
+            --bg-color-2: #d4f8d4; /* Light green */
+            --text-color-primary: #333333;
+            --header-gradient-start: #006400; /* Dark Green */
+            --header-gradient-end: #8b0000; /* Dark Red */
+            --chat-bg-color: rgba(255, 255, 255, 0.9);
+            --chat-border-color: rgba(0, 100, 0, 0.2);
+            --user-bubble-gradient-start: #f0e68c; /* Khaki */
+            --user-bubble-gradient-end: #ffe0b2; /* Light Orange */
+            --bot-bubble-gradient-start: #b2e0b2; /* Light Green */
+            --bot-bubble-gradient-end: #e0f0b2; /* Pale Yellow Green */
+            --input-bg-color: #fcfcfc;
+            --input-border-color: #a5d6a7;
+            --input-focus-ring: rgba(0, 100, 0, 0.2);
+            --button-gradient-start: #008000; /* Green */
+            --button-gradient-end: #cc0000; /* Red */
+            --loading-bg: rgba(0, 128, 0, 0.7);
+            --message-box-bg: #fff;
+            --message-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --footer-bg: #004d00; /* darker green */
+            --sidebar-bg: #e0ffe0;
+            --sidebar-border: #a5d6a7;
+            --sidebar-item-hover: #d0f0d0;
+            --sidebar-item-active: #c0e0c0;
+        }
+
+        .theme-f1 {
+            --bg-color-1: #1a1a1a;
+            --bg-color-2: #000000;
+            --text-color-primary: #e0e0e0;
+            --header-gradient-start: #cc0000; /* Racing Red */
+            --header-gradient-end: #ff8c00; /* Dark Orange */
+            --chat-bg-color: rgba(20, 20, 20, 0.95);
+            --chat-border-color: rgba(255, 255, 255, 0.1);
+            --user-bubble-gradient-start: #444444; /* Dark Grey */
+            --user-bubble-gradient-end: #666666; /* Medium Grey */
+            --bot-bubble-gradient-start: #000000; /* Black */
+            --bot-bubble-gradient-end: #222222; /* Darker Grey */
+            --input-bg-color: #0d0d0d;
+            --input-border-color: #ff4500; /* OrangeRed */
+            --input-focus-ring: rgba(255, 69, 0, 0.3);
+            --button-gradient-start: #ff4500;
+            --button-gradient-end: #ff0000;
+            --loading-bg: rgba(255, 69, 0, 0.7);
+            --message-box-bg: #111111;
+            --message-box-shadow: 0 0 20px rgba(255, 69, 0, 0.3);
+            --footer-bg: #0a0a0a;
+            --font-family-main: 'Orbitron', sans-serif; /* More futuristic font */
+            --sidebar-bg: #0a0a0a;
+            --sidebar-border: #ff4500;
+            --sidebar-item-hover: #1a1a1a;
+            --sidebar-item-active: #ff4500; /* Active item racing red */
+        }
+
+        .theme-space {
+            --bg-color-1: #0a0a20; /* Deep Space Blue */
+            --bg-color-2: #000000; /* Black Hole */
+            --text-color-primary: #e0e7ff; /* Starlight White */
+            --header-gradient-start: #4a00e0; /* Deep Violet */
+            --header-gradient-end: #8a2be2; /* Blue Violet */
+            --chat-bg-color: rgba(15, 15, 40, 0.95);
+            --chat-border-color: rgba(74, 0, 224, 0.4);
+            --user-bubble-gradient-start: #00bfff; /* Deep Sky Blue */
+            --user-bubble-gradient-end: #8a2be2; /* Blue Violet */
+            --bot-bubble-gradient-start: #ff00ff; /* Magenta */
+            --bot-bubble-gradient-end: #ff69b4; /* Hot Pink */
+            --input-bg-color: #1a1a40;
+            --input-border-color: #4a00e0;
+            --input-focus-ring: rgba(0, 191, 255, 0.3);
+            --button-gradient-start: #00bfff;
+            --button-gradient-end: #ff00ff;
+            --loading-bg: rgba(0, 191, 255, 0.7);
+            --message-box-bg: #1a1a40;
+            --message-box-shadow: 0 0 30px rgba(0, 191, 255, 0.4);
+            --footer-bg: #050515;
+            --header-text-shadow: 0 0 10px #00bfff, 0 0 20px #ff00ff;
+            --font-family-main: 'Space Grotesk', sans-serif;
+            --sidebar-bg: #050515;
+            --sidebar-border: #4a00e0;
+            --sidebar-item-hover: #1a1a40;
+            --sidebar-item-active: #00bfff; /* Active item space blue */
+        }
+
+        .theme-genz {
+            --bg-color-1: #fbf0f4; /* Soft Pink */
+            --bg-color-2: #e0f7fa; /* Light Cyan */
+            --text-color-primary: #333333;
+            --header-gradient-start: #ff9a8b; /* Peach */
+            --header-gradient-end: #ff6a88; /* Coral */
+            --chat-bg-color: rgba(255, 255, 255, 0.95);
+            --chat-border-color: rgba(255, 106, 136, 0.3);
+            --user-bubble-gradient-start: #a1c4fd; /* Light Blue */
+            --user-bubble-gradient-end: #c2e9fb; /* Pale Blue */
+            --bot-bubble-gradient-start: #fddb92; /* Light Yellow */
+            --bot-bubble-gradient-end: #ff7e5f; /* Orange Red */
+            --input-bg-color: #ffffff;
+            --input-border-color: #ff6a88;
+            --input-focus-ring: rgba(255, 106, 136, 0.3);
+            --button-gradient-start: #ff6a88;
+            --button-gradient-end: #ff9a8b;
+            --loading-bg: rgba(255, 106, 136, 0.7);
+            --message-box-bg: #fff;
+            --message-box-shadow: 0 5px 15px rgba(255, 106, 136, 0.2);
+            --footer-bg: #ff6a88; /* Footer matches button */
+            --font-family-main: 'Poppins', sans-serif;
+            --sidebar-bg: #ffe0e6;
+            --sidebar-border: #ff6a88;
+            --sidebar-item-hover: #fce8ed;
+            --sidebar-item-active: #fcc2cc;
+        }
+
+
+        /* Apply theme variables to body */
+        body {
+            font-family: var(--font-family-main);
+            background: linear-gradient(135deg, var(--bg-color-1) 0%, var(--bg-color-2) 100%);
+            color: var(--text-color-primary);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Prevent scrollbars from initial overflow */
+            flex-direction: column; /* To stack buttons above chat container */
+        }
+
+        /* Main chat container */
+        .chat-container {
+            background-color: var(--chat-bg-color); /* Themed */
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 95%;
+            max-width: 900px; /* Increased max-width to accommodate sidebar */
+            height: 90vh;
+            display: flex;
+            overflow: hidden;
+            position: relative; /* For absolute positioning of loading indicator */
+            border: 1px solid var(--chat-border-color); /* Themed */
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 0; /* Hidden by default */
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--sidebar-border);
+            transition: width 0.3s ease-in-out;
+            overflow-x: hidden; /* Hide horizontal scrollbar */
+            flex-shrink: 0; /* Prevent shrinking */
+            display: flex;
+            flex-direction: column;
+            padding-top: 1rem;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            z-index: 50; /* Ensure sidebar is above chat content when open */
+        }
+
+        .sidebar.open {
+            width: 250px; /* Width when open */
+        }
+
+        .sidebar-header {
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-color-primary);
+            border-bottom: 1px solid var(--sidebar-border);
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-history {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 0 1rem;
+        }
+
+        .sidebar-item {
+            padding: 0.75rem 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            background-color: transparent;
+            transition: background-color 0.2s ease;
+            color: var(--text-color-primary);
+            font-size: 0.9rem;
+            white-space: nowrap; /* Prevent text wrapping */
+            overflow: hidden; /* Hide overflow text */
+            text-overflow: ellipsis; /* Add ellipsis for overflow */
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-item:hover {
+            background-color: var(--sidebar-item-hover);
+        }
+
+        .sidebar-item.active {
+            background-color: var(--sidebar-item-active);
+            font-weight: 600;
+        }
+
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--sidebar-border);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .sidebar-button {
+            background: linear-gradient(45deg, var(--button-gradient-start), var(--button-gradient-end));
+            color: white;
+            border: none;
+            padding: 0.7rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 100%; /* Make buttons fill sidebar width */
+        }
+
+        .sidebar-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Main chat content area */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100%; /* Takes remaining width */
+        }
+
+        .chat-header {
+            background: linear-gradient(90deg, var(--header-gradient-start), var(--header-gradient-end)); /* Themed */
+            color: white;
+            padding: 1rem;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* Align items to start for hamburger */
+            font-weight: 600;
+            font-size: 1.25rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .hamburger-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8rem; /* Larger icon */
+            cursor: pointer;
+            padding: 0 0.5rem;
+            margin-right: 1rem;
+            display: flex; /* To center the lines */
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+        }
+        .hamburger-button:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-header-title {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            color: white; /* Ensure title is white */
+        }
+        .chat-header-title .status {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.8); /* Lighter white for status */
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            scroll-behavior: smooth; /* Smooth scrolling for new messages */
+        }
+        .message-bubble {
+            max-width: 80%;
+            padding: 0.8rem 1.2rem;
+            border-radius: 20px;
+            word-wrap: break-word;
+            line-height: 1.5;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--chat-border-color); /* Add a light border */
+        }
+        .message-user {
+            background-color: var(--user-bubble-gradient-start); /* Simpler color, less gradient */
+            align-self: flex-end;
+            color: var(--text-color-primary); /* Themed */
+        }
+        .message-bot {
+            background-color: var(--bot-bubble-gradient-start); /* Simpler color, less gradient */
+            align-self: flex-start;
+            color: var(--text-color-primary); /* Themed */
+        }
+        .chat-input-area {
+            display: flex;
+            padding: 1rem;
+            border-top: 1px solid var(--input-border-color); /* Themed */
+            background-color: var(--input-bg-color); /* Themed */
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+        .chat-input {
+            flex-grow: 1;
+            padding: 0.8rem 1.2rem;
+            border: 1px solid var(--input-border-color); /* Themed */
+            border-radius: 25px;
+            outline: none;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background-color: var(--input-bg-color); /* Themed */
+            color: var(--text-color-primary); /* Themed */
+        }
+        .chat-input:focus {
+            border-color: var(--button-gradient-start); /* Themed */
+            box-shadow: 0 0 0 3px var(--input-focus-ring); /* Themed */
+        }
+        .chat-button {
+            background: linear-gradient(45deg, var(--button-gradient-start), var(--button-gradient-end)); /* Themed */
+            color: white;
+            border: none;
+            padding: 0.8rem 1.2rem;
+            border-radius: 25px;
+            margin-left: 0.8rem;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .chat-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        .chat-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .loading-indicator {
+            position: absolute;
+            bottom: 60px; /* Adjust based on input area height */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--loading-bg); /* Themed */
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            display: none; /* Hidden by default */
+            z-index: 10;
+        }
+        .loading-indicator.active {
+            display: block;
+        }
+        /* Message Box for Alerts */
+        .message-box-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none; /* Hidden by default */
+        }
+        .message-box {
+            background: var(--message-box-bg); /* Themed */
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--message-box-shadow); /* Themed */
+            text-align: center;
+            max-width: 400px;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .message-box h3 {
+            margin-top: 0;
+            color: var(--text-color-primary); /* Themed */
+        }
+        .message-box p {
+            margin-bottom: 1.5rem;
+            color: var(--text-color-primary); /* Themed */
+        }
+        .message-box button {
+            background: linear-gradient(45deg, var(--button-gradient-start), var(--button-gradient-end)); /* Themed */
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s ease;
+        }
+        .message-box button:hover {
+            transform: translateY(-1px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Settings Modal Specific Styles */
+        .settings-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1100; /* Higher than message box */
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .settings-modal-content {
+            background: var(--chat-bg-color); /* Themed */
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Keep existing shadow for now */
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            animation: fadeInScale 0.3s ease-out;
+            position: relative;
+            transition: background-color 0.5s ease, box-shadow 0.5s ease;
+        }
+        .settings-modal-content h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-color-primary); /* Themed */
+            transition: color 0.5s ease;
+        }
+        .settings-modal-content label {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-color-primary); /* Themed */
+            transition: color 0.5s ease;
+        }
+        .settings-modal-content input[type="range"] {
+            width: 80%;
+            -webkit-appearance: none;
+            height: 10px;
+            border-radius: 5px;
+            background: var(--input-border-color); /* Themed */
+            outline: none;
+            opacity: 0.7;
+            transition: opacity .2s;
+        }
+        .settings-modal-content input[type="range"]:hover {
+            opacity: 1;
+        }
+        .settings-modal-content input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--button-gradient-start), var(--button-gradient-end)); /* Themed */
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .settings-modal-content input[type="range"]::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--button-gradient-start), var(--button-gradient-end)); /* Themed */
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .settings-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: var(--text-color-primary); /* Themed */
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .settings-modal-close:hover {
+            transform: rotate(90deg);
+            color: var(--button-gradient-start); /* Themed */
+        }
+        .settings-modal-content .responsive-info {
+            font-size: 0.95rem;
+            color: var(--text-color-primary); /* Themed */
+            margin-top: 1.5rem;
+            line-height: 1.5;
+            opacity: 0.8;
+        }
+
+        /* Search Bar Styling */
+        .search-input-container {
+            padding: 1rem 1.5rem 0.5rem; /* Padding adjusted to fit neatly below header */
+            background-color: var(--chat-bg-color); /* Matches chat background */
+            border-bottom: 1px solid var(--chat-border-color); /* Separator */
+        }
+        .search-input {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border: 1px solid var(--input-border-color);
+            border-radius: 20px;
+            outline: none;
+            font-size: 0.95rem;
+            background-color: var(--input-bg-color);
+            color: var(--text-color-primary);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .search-input:focus {
+            border-color: var(--button-gradient-start);
+            box-shadow: 0 0 0 3px var(--input-focus-ring);
+        }
+
+        /* Markdown and Code Styling within message-bubble */
+        .message-bubble pre {
+            background-color: rgba(0, 0, 0, 0.05); /* Light background for code blocks */
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            overflow-x: auto; /* Allow horizontal scrolling for long lines */
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        .message-bubble pre code {
+            font-family: 'Fira Code', 'Consolas', 'Monaco', monospace; /* Monospaced font for code */
+            font-size: 0.9em;
+            color: var(--text-color-primary);
+        }
+        .message-bubble strong {
+            font-weight: 600; /* Make bold text stand out more */
+        }
+        .message-bubble em {
+            font-style: italic;
+        }
+        .message-bubble ul, .message-bubble ol {
+            margin-top: 0.5rem;
+            margin-left: 1.2rem; /* Indent lists */
+            padding: 0;
+        }
+        .message-bubble ul li {
+            list-style-type: disc; /* Default disc for unordered lists */
+        }
+        .message-bubble ol li {
+            list-style-type: decimal; /* Default decimal for ordered lists */
+        }
+        .message-bubble a {
+            color: var(--header-gradient-start); /* Link color */
+            text-decoration: underline;
+        }
+        .message-bubble h1, .message-bubble h2, .message-bubble h3, .message-bubble h4, .message-bubble h5, .message-bubble h6 {
+            font-weight: 700;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color-primary);
+        }
+        .message-bubble h1 { font-size: 1.5em; }
+        .message-bubble h2 { font-size: 1.3em; }
+        .message-bubble h3 { font-size: 1.1em; }
+
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .chat-container {
+                width: 100%;
+                height: 100vh;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            body {
+                align-items: flex-start; /* Align to top on small screens */
+            }
+            .chat-input-area {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .chat-input, .chat-button {
+                width: 100%;
+                margin-left: 0 !important; /* Ensure buttons stack properly */
+            }
+            .message-bubble {
+                max-width: 95%;
+            }
+            .settings-modal-content {
+                padding: 2rem 1.5rem;
+            }
+            .chat-header {
+                font-size: 1rem; /* Smaller font for header on small screens */
+                padding: 0.8rem;
+                border-radius: 0;
+            }
+            .hamburger-button {
+                font-size: 1.5rem;
+            }
+            .search-input-container {
+                padding: 0.8rem 1rem 0.4rem;
+            }
+            /* Sidebar on mobile */
+            .sidebar.open {
+                width: 100%; /* Full width on mobile */
+                position: absolute;
+                height: 100%;
+                top: 0;
+                left: 0;
+            }
+            .main-content {
+                width: 100%; /* Ensure main content always takes full width */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                Chat History 📜
+                <button id="closeSidebarButton" class="hamburger-button text-gray-600 hover:text-gray-800 focus:outline-none">
+                    &times;
+                </button>
+            </div>
+            <div id="sidebarHistory" class="sidebar-history">
+                <!-- Chat history items will be loaded here -->
+            </div>
+            <div class="sidebar-footer">
+                <button id="newChatButton" class="sidebar-button">New Chat ✨</button>
+                <button id="clearChatButton" class="sidebar-button bg-red-500 hover:bg-red-600">Clear Current Chat 🧹</button>
+                <button id="settingsButtonSidebar" class="sidebar-button">Settings⚙️</button>
+                <button id="voiceButton" class="sidebar-button">Voice 🎤</button>
+            </div>
+        </div>
+
+        <!-- Main Chat Content -->
+        <div class="main-content">
+            <div class="chat-header">
+                <button id="hamburgerButton" class="hamburger-button">☰</button>
+                <div class="chat-header-title">
+                    XaioninAI Assistant
+                    <span class="status">Online</span>
+                </div>
+            </div>
+            <!-- Search Input Field -->
+            <div class="search-input-container">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search conversations...">
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <!-- Chat messages will be appended here -->
+            </div>
+            <div id="loadingIndicator" class="loading-indicator">Thinking...</div>
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" class="chat-input" placeholder="Type your message...">
+                <button id="sendButton" class="chat-button">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Message Box -->
+    <div id="messageBoxOverlay" class="message-box-overlay">
+        <div class="message-box">
+            <h3 id="messageBoxTitle"></h3>
+            <p id="messageBoxContent"></p>
+            <button id="messageBoxCloseButton">OK</button>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModalOverlay" class="settings-modal-overlay">
+        <div class="settings-modal-content">
+            <button id="settingsModalClose" class="settings-modal-close">&times;</button>
+            <h3>Settings ⚙️</h3>
+            <div class="mb-6">
+                <label for="masterVolume">Master Volume:</label>
+                <input type="range" id="masterVolume" min="0" max="100" value="50">
+                <span id="volumeValue">50%</span>
+            </div>
+            <!-- Theme Change Button inside Settings -->
+            <div class="mb-6">
+                <button id="themeSwitcherButton" class="chat-button">Switch Theme 🎨</button>
+            </div>
+            <p class="responsive-info">
+                **Responsive Design:** XaioninAI is designed to automatically adapt to your screen size (mobile, tablet, laptop, desktop). There is no manual resize function needed as the layout adjusts dynamically for the best experience. 📱💻🖥️
+            </p>
+        </div>
+    </div>
+
+    <script type="module">
+        // API Keys (IMPORTANT: For production, handle these securely on a backend)
+        const NEWS_API_KEY = 'd4db66109397408785cb33c7698bdfba';
+        const OPENWEATHER_API_KEY = 'f796eb0c7f86a324c9632d984b4d282b';
+        
+        // YOUR GOOGLE GEMINI API KEY FOR GENERAL XaioninAI AND AGRICULTURAL AI
+        const GOOGLE_API_KEY = 'AIzaSyDC2jiZGahI5Ss3B8J8njR7I2dvI4Nmd_w'; // <--- API KEY INSERTED HERE!
+
+        // DOM Elements
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendButton = document.getElementById('sendButton');
+        const voiceButton = document.getElementById('voiceButton');
+        const clearChatButton = document.getElementById('clearChatButton'); // Now for current chat
+        const newChatButton = document.getElementById('newChatButton'); // New chat button
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const messageBoxOverlay = document.getElementById('messageBoxOverlay');
+        const messageBoxTitle = document.getElementById('messageBoxTitle');
+        const messageBoxContent = document.getElementById('messageBoxContent');
+        const messageBoxCloseButton = document.getElementById('messageBoxCloseButton');
+        const searchInput = document.getElementById('searchInput'); // Search input field
+
+        // Sidebar DOM Elements
+        const sidebar = document.getElementById('sidebar');
+        const hamburgerButton = document.getElementById('hamburgerButton');
+        const closeSidebarButton = document.getElementById('closeSidebarButton');
+        const sidebarHistory = document.getElementById('sidebarHistory');
+
+        // Theme and Settings DOM Elements
+        const themeSwitcherButton = document.getElementById('themeSwitcherButton'); // Now inside settings modal
+        const settingsButtonSidebar = document.getElementById('settingsButtonSidebar'); // Settings button in sidebar
+        const settingsModalOverlay = document.getElementById('settingsModalOverlay');
+        const settingsModalClose = document.getElementById('settingsModalClose');
+        const masterVolumeSlider = document.getElementById('masterVolume');
+        const volumeValueSpan = document.getElementById('volumeValue');
+
+        // Global state for conversations
+        let conversations = []; // Array of { id, title, messages, timestamp }
+        let currentConversationId = null; // ID of the currently active conversation
+        let currentMode = 'chat'; // 'chat' or 'voice'
+        let recognition; // For Web Speech API SpeechRecognition
+        let isListening = false; // To track if voice recognition is active
+        let userMemory = {}; // Object to store user-specific facts in local storage
+
+        // Theme management
+        const themes = ['professional', 'simple', 'neon', 'cultural', 'f1', 'space', 'genz']; // 'professional' is now first/default
+        let currentThemeIndex = 0; // Default to 'professional'
+
+        // Global volume setting (0-100)
+        let masterVolume = 50;
+
+
+        // --- Data for XaioninAI to access ---
+        const disaster_profiles_data = {
+            'sylhet': {
+                name: 'Sylhet Division',
+                commonDisasters: 'Flash Floods, Landslides, Earthquakes',
+                pastHistory: 'Significant floods in 2022 affecting millions; recurrent landslides in hilly areas.',
+                awareness: 'Learn about early warning signs for flash floods and safe evacuation routes. Prepare emergency kits.'
+            },
+            'rajshahi': {
+                name: 'Rajshahi Division',
+                commonDisasters: 'Droughts, River Erosion, Cold Waves',
+                pastHistory: 'Frequent droughts impacting agriculture; severe river erosion along the Padma.',
+                awareness: 'Water conservation techniques are crucial. Understand river erosion risks and mitigation.'
+            },
+            'dhaka': {
+                name: 'Dhaka Division',
+                commonDisasters: 'Urban Flooding, Earthquakes, Fires',
+                pastHistory: 'Annual monsoon flooding; high seismic risk; numerous building fires.',
+                awareness: 'Prepare for urban waterlogging. Know earthquake safety protocols and fire prevention.'
+            },
+            'chittagong': {
+                name: 'Chittagong Division',
+                commonDisasters: 'Cyclones, Landslides, Storm Surges',
+                pastHistory: 'Highly cyclone-prone; devastating landslides in hilly areas.',
+                awareness: 'Cyclone shelter locations, early warning systems, and landslide risk zones.'
+            },
+            'khulna': {
+                name: 'Khulna Division',
+                commonDisasters: 'Cyclones, Salinity Intrusion, River Erosion',
+                pastHistory: 'Severely impacted by cyclones Sidr and Aila; increasing salinity affecting livelihoods.',
+                awareness: 'Coastal preparedness, adaptation to salinity, and safe water sources.'
+            },
+            'barisal': {
+                name: 'Barisal Division',
+                commonDisasters: 'Cyclones, Storm Surges, River Erosion',
+                pastHistory: 'Highly vulnerable to cyclonic storms and tidal surges from the Bay of Bengal.',
+                awareness: 'Importance of cyclone shelters, emergency communication, and safe evacuation.'
+            },
+            'mymensingh': {
+                name: 'Mymensingh Division',
+                commonDisasters: 'Floods, River Erosion, Cold Waves',
+                pastHistory: 'Frequent flooding from major rivers; erosion affecting riverside communities.',
+                awareness: 'Flood preparedness, safe drinking water during floods, and winter health tips.'
+            },
+            'rangpur': {
+                name: 'Rangpur Division',
+                commonDisasters: 'Floods, Cold Waves, River Erosion',
+                pastHistory: 'Annual floods from Brahmaputra and Teesta; severe cold waves in winter.',
+                awareness: 'Flood safety, livestock protection, and measures against extreme cold.'
+            }
+        };
+
+        const shelter_data = [
+            { name: "Cox's Bazar Cyclone Shelter", division: "Chittagong", district: "Cox's Bazar", capacity: 2000, status: "Available", facilities: "Toilets, Food, Water, Medical Post" },
+            { name: "Sirajganj Flood Shelter", division: "Rajshahi", district: "Sirajganj", capacity: 500, status: "Filling Up", facilities: "Toilets, Water" },
+            { name: "Dhaka North Community Center", division: "Dhaka", district: "Dhaka", capacity: 300, status: "Full", facilities: "Basic Toilets" },
+            { name: "Bagerhat School Shelter", division: "Khulna", district: "Bagerhat", capacity: 800, status: "Available", facilities: "Toilets, Water, First Aid" }
+        ];
+
+        const emergency_contacts_data = [
+            { service: "National Helpline", division: "All", district: "All", number: "999", notes: "Emergency services (Police, Fire, Ambulance)" },
+            { service: "Fire Service & Civil Defense", division: "Dhaka", district: "Dhaka", number: "02-9555555", notes: "Central Control Room" },
+            { service: "Police Station", division: "Sylhet", district: "Sylhet Sadar", number: "0821-716222", notes: "Local Police Station" },
+            { service: "District Hospital", division: "Rajshahi", district: "Rajshahi", number: "0721-771234", notes: "General Hospital" },
+            { service: "BRAC (NGO)", division: "All", district: "All", number: "16221", notes: "Development & Humanitarian Aid" }
+        ];
+
+        const knowledge_base = {
+            'einstein': 'Albert Einstein was a theoretical physicist who developed the theory of relativity. ⚛️💡',
+            'newton': 'Sir Isaac Newton was an English mathematician, physicist, and astronomer who is widely recognized as one of the greatest mathematicians and physicists of all time. 🍎🌌',
+            'bangladesh': `
+                # 🇧🇩 বাংলাদেশ: একটি বিস্তারিত পরিচিতি 🇧🇩
+
+                ## 🌍 সাধারণ পরিচিতি:
+                * **পুরো নাম:** গণপ্রজাতন্ত্রী বাংলাদেশ
+                * **রাজধানী:** ঢাকা 🏙️
+                * **আয়তন:** ১,৪৭,৫৭০ বর্গ কিলোমিটার (৫৬,৯৭৭ বর্গ মাইল) 📏
+                * **জনসংখ্যা:** প্রায় ১৬৯ মিলিয়ন (২০২৪ সালের অনুমান) 👥
+                * **দাপ্তরিক ভাষা:** বাংলা (বাংলা) 🗣️
+                * **মুদ্রা:** বাংলাদেশী টাকা (BDT) ৳
+                * **সরকার:** সংসদীয় প্রজাতন্ত্র 🏛️
+                * **রাষ্ট্রপতি:** মোহাম্মদ সাহাবুদ্দিন 👑
+                * **প্রধানমন্ত্রী:** শেখ হাসিনা 👩‍💼
+                * **স্বাধীনতা:** ২৬ মার্চ, ১৯৭১ (ঘোষিত); ১৬ ডিসেম্বর, ১৯৭১ (বিজয় দিবস) 🗓️
+                * **জাতীয় সঙ্গীত:** আমার সোনার বাংলা 🎶
+
+                ## 🏞️ ভূগোল:
+                * **অবস্থান:** গঙ্গা-ব্রহ্মপুত্র ব-দ্বীপে অবস্থিত। উত্তরে, পশ্চিমে এবং পূর্বে ভারত 🇮🇳, দক্ষিণ-পূর্বে মিয়ানমার 🇲🇲 এবং দক্ষিণে বঙ্গোপসাগর 🌊 দ্বারা বেষ্টিত। 📍
+                * **ভূখণ্ড:** প্রধানত সমতল, উর্বর পলিমাটি। নিচু ভূমি, বন্যাপ্রবণ। দক্ষিণ-পূর্ব অংশে কিছু পাহাড়ি এলাকা রয়েছে। 🏞️
+                * **প্রধান নদী:** গঙ্গা (পদ্মা) 💧, ব্রহ্মপুত্র (যমুনা) 💧, মেঘনা 💧। এই নদীগুলো কৃষি 🌾 ও পরিবহনের জন্য অত্যন্ত গুরুত্বপূর্ণ, তবে বন্যার কারণও বটে। 🌊
+                * **জলবায়ু:** ক্রান্তীয় মৌসুমি জলবায়ু। গরম, আর্দ্র গ্রীষ্মকাল ☀️ এবং হালকা, শুষ্ক শীতকাল 🌬️। ঘূর্ণিঝড় 🌀, বন্যা 🌧️ এবং খরার ঝুঁকিপূর্ণ।
+                * **প্রাকৃতিক সম্পদ:** প্রাকৃতিক গ্যাস 🔥, আবাদি জমি 🌳, কাঠ 🪵 এবং কিছু কয়লা।
+
+                ## 📜 ইতিহাস:
+                * **প্রাচীন বাংলা:** মৌর্য, গুপ্ত এবং পাল সাম্রাজ্য সহ বিভিন্ন সাম্রাজ্যের অংশ ছিল। 🏛️
+                * **ইসলামিক প্রভাব:** সুফি ধর্মপ্রচারকদের আগমন এবং বাংলায় দিল্লি সালতানাতের নিয়ন্ত্রণ প্রতিষ্ঠা। 🕌
+                * **মুঘল শাসন:** বাংলা মুঘল সাম্রাজ্যের একটি সমৃদ্ধ প্রদেশ হয়ে ওঠে। 💎
+                * **ব্রিটিশ ঔপনিবেশিক শাসন:** ব্রিটিশ ইস্ট ইন্ডিয়া কোম্পানি ধীরে ধীরে নিয়ন্ত্রণ লাভ করে এবং বাংলা ব্রিটিশ ভারতের অংশ হয়। 🇬🇧
+                * **ভারত বিভাজন (১৯৪৭):** বাংলা বিভক্ত হয়; পূর্বাঞ্চল (পূর্ব বাংলা) পাকিস্তানের অংশ হয় এবং এর নামকরণ করা হয় পূর্ব পাকিস্তান। 🇵🇰
+                * **মুক্তিযুদ্ধ (১৯৭১):** রাজনৈতিক ও সাংস্কৃতিক নিপীড়ন এবং নির্বাচনের ফলাফল অস্বীকারের কারণে পূর্ব পাকিস্তান পশ্চিম পাকিস্তানের কাছ থেকে স্বাধীনতার জন্য যুদ্ধ করে, যার ফলে বাংলাদেশের সৃষ্টি হয়। ভারত বাংলাদেশের স্বাধীনতাকে সমর্থন করতে গুরুত্বপূর্ণ ভূমিকা পালন করে। ⚔️🇧🇩
+                * **স্বাধীনতার পর:** বাংলাদেশ দারিদ্র্য, রাজনৈতিক অস্থিতিশীলতা এবং প্রাকৃতিক দুর্যোগ সহ বিভিন্ন চ্যালেঞ্জের সম্মুখীন হয়েছে, তবে অর্থনৈতিক উন্নয়নেও উল্লেখযোগ্য অগ্রগতি অর্জন করেছে। 📈
+
+                ## 💰 অর্থনীতি:
+                * **প্রধান শিল্প:** পোশাক উৎপাদন (বৃহত্তম রপ্তানি খাত) 👕, কৃষি (ধান, পাট, চা) 🌾, বস্ত্র 🧵, ফার্মাসিউটিক্যালস 💊, জাহাজ নির্মাণ 🚢।
+                * **অর্থনৈতিক প্রবৃদ্ধি:** পোশাক শিল্প এবং Overseas শ্রমিকদের রেমিটেন্সের কারণে সাম্প্রতিক দশকগুলোতে বাংলাদেশ শক্তিশালী অর্থনৈতিক প্রবৃদ্ধি অর্জন করেছে। 🚀
+                * **চ্যালেঞ্জ:** দারিদ্র্য 📉, বৈষম্য, দুর্নীতি 🚫, অবকাঠামোগত সীমাবদ্ধতা, জলবায়ু পরিবর্তনের দুর্বলতা।
+                * **রেমিটেন্স:** আয়ের একটি উল্লেখযোগ্য উৎস, যেখানে লক্ষ লক্ষ বাংলাদেশী বিদেশে কাজ করে, প্রধানত মধ্যপ্রাচ্যে। 💸
+
+                ## 🎨 সংস্কৃতি:
+                * **ভাষা:** বাংলা দাপ্তরিক ভাষা এবং সাহিত্য 📚, কবিতা 📜 ও সঙ্গীতে 🎶 সমৃদ্ধ।
+                * **ধর্ম:** ইসলাম ☪️ প্রধান ধর্ম, তবে উল্লেখযোগ্য সংখ্যক হিন্দু 🕉️ সংখ্যালঘুও রয়েছে। অন্যান্য ধর্মের মধ্যে বৌদ্ধধর্ম ☸️ ও খ্রিস্টধর্ম ✝️ অন্তর্ভুক্ত।
+                * **শিল্পকলা:** লোকসংগীত 🎤, নৃত্য 💃, থিয়েটার 🎭 এবং হস্তশিল্পের (যেমন: মৃৎশিল্প 🏺, বুনন 🧶 এবং সূচিকর্ম 🧵) সমৃদ্ধ ঐতিহ্য রয়েছে।
+                * **রন্ধনপ্রণালী:** ভাত 🍚 এবং মাছ 🐟 প্রধান খাদ্য। জনপ্রিয় খাবারের মধ্যে বিরিয়ানি 🍛, তরকারি 🌶️ এবং বিভিন্ন মিষ্টি 🍮 অন্তর্ভুক্ত।
+                * **উৎসব:** ঈদ-উল-ফিতর 🎉, ঈদ-উল-আযহা 🐑, দুর্গাপূজা (হিন্দু উৎসব) 🪔, পহেলা বৈশাখ (বাংলা নববর্ষ) 🎊।
+
+                ## 🏛️ রাজনীতি:
+                * **সংসদীয় ব্যবস্থা:** প্রধানমন্ত্রী সরকার প্রধান এবং রাষ্ট্রপতি রাষ্ট্রপ্রধান (মূলত আনুষ্ঠানিক)। 🗳️
+                * **প্রধান রাজনৈতিক দল:** আওয়ামী লীগ, বাংলাদেশ জাতীয়তাবাদী দল (বিএনপি)। 🤝
+                * **রাজনৈতিক চ্যালেঞ্জ:** রাজনৈতিক মেরুকরণ, দুর্নীতি এবং গণতান্ত্রিক অনুশীলন সম্পর্কে উদ্বেগ। 🚧
+
+                ## 👥 সামাজিক সমস্যা:
+                * **দারিদ্র্য:** দারিদ্র্য হ্রাসে উল্লেখযোগ্য অগ্রগতি হয়েছে, তবে এটি এখনও একটি বড় চ্যালেঞ্জ। 📉
+                * **শিক্ষা:** শিক্ষার সুযোগ বৃদ্ধি একটি অগ্রাধিকার, তবে গুণগত মান এবং ভর্তির হারে চ্যালেঞ্জ রয়ে গেছে। 🏫
+                * **স্বাস্থ্যসেবা:** স্বাস্থ্যসেবার সুযোগ সীমিত, বিশেষ করে গ্রামীণ এলাকায়। 🏥
+                * **জলবায়ু পরিবর্তন:** সমুদ্রপৃষ্ঠের উচ্চতা বৃদ্ধি 🌊, বন্যা বৃদ্ধি 🌧️ এবং ঘূর্ণিঝড় 🌀 সহ জলবায়ু পরিবর্তনের প্রভাবের প্রতি বাংলাদেশ অত্যন্ত ঝুঁকিপূর্ণ।
+
+                ## 🗺️ প্রধান পর্যটন আকর্ষণ:
+                * **সুন্দরবন:** বিশ্বের বৃহত্তম ম্যানগ্রোভ বন 🌳, একটি ইউনেস্কো বিশ্ব ঐতিহ্যবাহী স্থান।
+                * **কক্সবাজার:** বিশ্বের দীর্ঘতম প্রাকৃতিক সমুদ্র সৈকতগুলির মধ্যে একটি। 🏖️
+                * **ঢাকা:** ঐতিহাসিক স্থান 🕌, মসজিদ এবং প্রাণবন্ত বাজার 🛍️ সহ ব্যস্ত রাজধানী শহর।
+                * **সিলেট:** চা বাগান ☕ এবং মনোরম সৌন্দর্যের জন্য পরিচিত। 🏞️
+                * **প্রত্নতাত্ত্বিক স্থান:** মহাস্থানগড়, পাহাড়পুর। 🗿
+            `,
+        };
+
+        const rescue_knowledge_base = {
+            'earthquake': 'In case of an earthquake, drop to the ground, take cover under a sturdy object, and hold on until the shaking stops. Afterward, check for gas leaks and structural damage before exiting. 🌍🚨',
+            'flood': 'During a flood, move to higher ground and avoid walking or driving through floodwaters. Stay informed about weather conditions and follow evacuation orders. 🌊⚠️',
+            'fire': 'In case of fire, evacuate the building immediately using the nearest exit. If you are trapped, cover your mouth with a cloth and stay low to avoid smoke inhalation. 🔥🏃‍♀️',
+            'tornado': 'When a tornado is approaching, take shelter in a basement or small interior room on the lowest level of your home. Avoid windows and cover yourself with heavy blankets. 🌪️🛡️',
+            'cyclone': 'For cyclones, evacuate to designated shelters if advised. Secure loose objects, stay indoors, and have an emergency kit ready. Stay away from windows and doors. 🌀🏠',
+            'landslide': 'If a landslide is imminent, evacuate immediately. If caught in one, curl into a ball and protect your head. After, avoid the slide area as more slides can occur. ⛰️🆘'
+        };
+
+        const diseases_info = {
+            'cold': 'The common cold is a viral infection affecting the upper respiratory tract. Treatment includes rest, hydration, and over-the-counter medications for symptom relief. 🤧💧💊',
+            'flu': 'Influenza (flu) is a contagious respiratory illness caused by influenza viruses. Treatment includes rest, hydration, and antiviral medications. 😷💧💊',
+            'fever': 'Fever is a common symptom of various infections. Treatment includes rest, staying hydrated, and taking fever-reducing medications such as acetaminophen or ibuprofen. 🌡️💧💊',
+            'malaria': 'Malaria is a mosquito-borne infectious disease. Symptoms include fever, fatigue, vomiting, and headaches. Prevention involves mosquito control and antimalarial drugs. Treatment requires specific antimalarial medications. 🦟🤒💊',
+            'dengue': 'Dengue is a mosquito-borne viral infection. Symptoms include high fever, severe headache, muscle and joint pains, and skin rash. Rest, hydration, and pain relievers are key. Avoid aspirin. Seek medical attention for severe symptoms. 🦟🤕💧',
+            'diarrhea': 'Diarrhea is characterized by loose, watery stools. The main treatment is rehydration (Oral Rehydration Saline - ORS). Avoid sugary drinks. Consult a doctor if symptoms persist or worsen, especially in children. 🚽💧🤢',
+            'cholera': 'Cholera is an acute diarrheal infection caused by contaminated food or water. It causes severe dehydration. Immediate rehydration with ORS and sometimes antibiotics are crucial. Seek medical help urgently. 🤢💧🚨',
+        };
+
+        const first_aid_info = {
+            'cuts': 'For minor cuts, clean with soap and water, apply antiseptic, and cover with a sterile bandage. For deep cuts with heavy bleeding, apply direct pressure with a clean cloth and seek immediate medical help. 🔪🩹🩸',
+            'burns': 'For minor burns, cool with cold (not ice) water for 10-15 minutes, then cover with a sterile, non-adhesive bandage. Do not pop blisters. For severe burns, seek immediate medical attention. 🔥🩹🚨',
+            'fractures': 'If you suspect a fracture, immobilize the injured area using a splint if possible. Apply ice to reduce swelling. Do not try to realign the bone. Seek immediate medical attention. 🦴❄️🚨',
+            'choking': 'For choking, perform abdominal thrusts (Heimlich maneuver). If the person becomes unconscious, begin CPR. 😵🆘',
+            'bleeding': 'For external bleeding, apply direct pressure to the wound with a clean cloth. Elevate the injured part if possible. If bleeding is severe, seek immediate medical help. 🩸🩹🚨',
+            'snake bite': 'Keep the person calm and still. Remove any tight clothing or jewelry near the bite. Clean the wound gently with soap and water. Do NOT cut the bite, apply ice, or try to suck out venom. Seek immediate medical attention. 🐍🩹🚨'
+        };
+
+        const doctor_profiles_data = [
+            { name: 'Amina Begum', specialization: 'General Physician', location: 'Dhaka', availability: 'Online / Dhaka Medical College Hospital', contact: '+88017XXXXXXXX', imageUrl: 'https://placehold.co/32x32/4285F4/FFFFFF?text=AB' },
+            { name: 'Kamal Hossain', specialization: 'Orthopedic Surgeon', location: 'Chittagong', availability: 'Chittagong General Hospital', contact: '+88018XXXXXXXX', imageUrl: 'https://placehold.co/32x32/EA4335/FFFFFF?text=KH' },
+            { name: 'Farida Yesmin', specialization: 'Pediatrician', location: 'Sylhet', availability: 'Sylhet MAG Osmani Medical College Hospital', contact: '+88019XXXXXXXX', imageUrl: 'https://placehold.co/32x32/FBBC04/FFFFFF?text=FY' },
+            { name: 'Alim Khan', specialization: 'Internal Medicine', location: 'Rajshahi', availability: 'Rajshahi Medical College Hospital', contact: '+88016XXXXXXXX', imageUrl: 'https://placehold.co/32x32/34A853/FFFFFF?text=AK' }
+        ];
+
+        const crop_diseases_info = {
+            'blight': 'Blight is a plant disease characterized by rapid and extensive browning, wilting, and death of plant tissues such as leaves, branches, twigs, or flowers. It is often caused by fungal or bacterial infections. Treatment depends on the specific type of blight but often includes fungicides or bactericides and removal of affected infected plant debris. 🍂🦠',
+            'rust': 'Rusts are fungal diseases that typically appear as powdery, orange, or reddish-brown spots on the leaves and stems of plants. Severe infections can lead to defoliation and reduced yield. Management often involves resistant varieties, fungicides, and removing infected infected plant debris. 🟠🍄',
+            'aphids': 'Aphids are small sap-sucking insects that can cause curled, yellowed, or stunted leaves and can transmit viruses. They often leave behind a sticky substance called honeydew. Treatment includes insecticidal soaps, neem oil, or introducing natural predators like ladybugs. 🐞🌿',
+            'leaf spot': 'Leaf spot is a common fungal or bacterial disease that causes circular or irregular spots on leaves, often with distinct borders and colors. Severe infestations can lead to defoliation. Treatment typically involves removing infected leaves, ensuring good air circulation, and applying fungicides if necessary. 🍁💧',
+            'root rot': 'Root rot is caused by various fungi or water molds that thrive in overly wet soil, leading to the decay of plant roots. Symptoms include wilting, yellowing leaves, stunted growth, and eventually plant death. Prevention focuses on proper drainage and avoiding overwatering. 🪱💧'
+        };
+
+        const intro_responses = [
+            "Hello! I'm XaioninAI, your AI assistant for global readiness and daily assistance. How can I help you today? 👋🤖",
+            "Hi! I'm XaioninAI, here to assist you with information on disaster preparedness, general knowledge, medical emergencies, crop suggestions, and more, for anyone around the world. What would you like to know? ✨🌍",
+            "Hey! I'm XaioninAI, your AI helper for global readiness, developed by a Bangladeshi team. Ask me about weather, shelters, emergency contacts, or even crop problems! 🇧🇩💡",
+            "Hello there! I'm XaioninAI. You can ask me to search for information 🔍, provide updates 📈, offer assistance with health 🩺 or agriculture 🌾, or give medical guidance 💊. Just ask away! 😊"
+        ];
+
+        const jokes = [
+            "Why don't scientists trust atoms? Because they make up everything! 😂",
+            "What do you call a fake noodle? An impasta! 🍝",
+            "Why did the scarecrow win an award? Because he was outstanding in his field! 🌾🏆",
+            "I told my wife she was drawing her eyebrows too high. She looked surprised. 😲",
+            "Why don't skeletons fight each other? They're too busy chilling! 💀❄️",
+            "I'm reading a book about anti-gravity. It's impossible to put down! 📚⬆️",
+            "Why did the bicycle fall over? Because it was two-tired! 🚲😴",
+            "What do you call a sad strawberry? A blueberry! 🍓😢",
+            "Did you hear about the restaurant on the moon? Great food, no atmosphere! 🌕🍽️",
+            "Why don't you ever see elephants hiding in trees? Because they're so good at it! 🐘🌳"
+        ];
+
+        const SUPPORTED_COMMANDS = {
+            "General": [
+                "hi/hello/hey/greetings/howdy/hiya/what's up: Greet the assistant. 👋",
+                "your name / who are you / what are you / tell me about yourself / describe yourself / your purpose: Ask the assistant's name and purpose. 🤖",
+                "what can you do / list commands / help / commands: Get a list of supported commands. 📜",
+                "exit / goodbye / ok bye: Shut down the assistant. 👋",
+                "clear chat: Clear the current conversation history. 🧹"
+            ],
+            "Information & Search": [
+                "who is [person] / tell me about [topic]: Get information from Wikipedia. 🧑‍🏫",
+                "search for [query] / google search [query]: Perform a Google search (simulated). 🔍",
+                "play [song name]: Search for a song on YouTube (simulated). 🎵",
+                "news update [in country code/name]: Get latest news headlines (e.g., 'news update in us', 'news update in Bangladesh'). 📰",
+                "tell me the time / what time is it / time now / current time in [city/country]: Get the current time (currently only Bangladesh time is supported). ⏰",
+                "tell me the date / date today / what is today's date: Get the current date. 📅",
+                "what is the current date and time: Get both the current date and time. 🗓️⏰",
+                "weather in [city] / temperature in [city] / how's the weather in [city]: Get current weather conditions (e.g., 'weather in London', 'temperature in Rajshahi today'). ☀️🌧️",
+                "define [word]: Get the definition of a word. 📖",
+                "tell me a joke: Hear a random joke. 😂",
+                "generate random number [min] to [max]: Generate a random number (e.g., 'generate random number 1 to 100'). 🎲"
+            ],
+            "Personal Memory": [
+                "remember that [thing] is [value] / remember my [thing] is [value]: Store a personal fact (e.g., 'remember my name is Alex', 'remember that my favorite color is blue'). 🧠",
+                "what is my [thing] / what did I tell you about [thing]: Recall a personal fact (e.g., 'what is my name?', 'what did I tell you about my favorite color?'). 🤔",
+                "forget my [thing] / forget that [thing]: Delete a personal fact. 🗑️"
+            ],
+            "Disaster Preparedness & Response": [
+                "disaster profile for [division] / disasters in [division] / info on disasters in [division] / risks in [division]: Get disaster risks for a division (e.g., 'disaster profile for Sylhet'). 🚨",
+                "shelters in [division/district] / find shelters in [location] / where are shelters in [location] / list shelters near [location]: Find available shelters (e.g., 'shelters in Dhaka', 'list shelters near Cox\'s Bazar'). 🏠",
+                "emergency contact for [service/division] / contact for [service] / phone number for [service] / helpline for [service]: Get contact numbers (e.g., 'emergency contact for National Helpline', 'phone number for fire service'). 📞",
+                "real-time map status / describe the map: Get a description of the simulated real-time map. 🗺️"
+            ],
+            "Health & Safety": [
+                "health monitoring / check my health / my vitals / health check: Get instructions for health parameter input. ❤️‍🩹",
+                "my heart rate is [value], oxygen [value], temp [value], BP [value], diabetes [yes/no], blood sugar [value]: Provide health data for a report. 📊",
+                "rescue help for [disaster]: Get safety information for specific disasters (e.g., 'rescue help for earthquake'). 🆘",
+                "first aid for [injury/condition] / help for [injury] / what to do for [injury]: Get first aid tips (e.g., 'first aid for cuts', 'what to do for a burn'). 🩹",
+                "treatment of [disease] / cure for [disease] / how to treat [disease]: Get information on disease treatment (e.g., 'treatment of cold', 'how to treat dengue'). 💊",
+                "find a doctor / doctor profiles / doctors available: Get information about available doctors. 👩‍⚕️👨‍⚕️"
+            ],
+            "Agriculture & Crops": [
+                "crop problem [disease name] / my plant has [disease] / what's wrong with my crops / diagnose crop problem: Get information about a specific crop disease (e.g., 'crop problem blight'). 🐛",
+                "identify crop problem / what's wrong with my crops: Get guidance on diagnosing crop issues. 🧐",
+                "suggest crops for [percentage] loss and [soil type] soil / recommend crops for [percentage] damage and [soil type] soil: Get AI-powered crop suggestions (e.g., 'suggest crops for 70% loss and clay soil'). 🌱"
+            ],
+            "System/App Interaction": [
+                "open whatsapp: Open WhatsApp Web (simulated). 📱",
+                "open youtube: Open YouTube (simulated). 📺",
+                "open google: Open Google (simulated). 🌐"
+            ],
+            "Calculations": [
+                "calculate [expression] / what is [expression] / [expression]: Perform basic arithmetic (e.g., 'calculate 2+2', 'what is 5*8', '4+4', '10/2?'). ➕➖✖️➗"
+            ],
+            "Mode Switching": [
+                "activate voice / switch to voice: Switch to Voice Mode (from Chat Mode). 🎤",
+                "switch to chat / enable chat: Switch to Chat Mode (from Voice Mode). 💬"
+            ],
+            "Generative/Creative": [
+                "write a paragraph on [topic] ✍️",
+                "compose an email [details] 📧",
+                "write a dialogue between [characters] 🗣️",
+                "explain [concept] 💡",
+                "summarize [text] 📝"
+            ]
+        };
+
+        // Map for converting country names to 2-letter ISO codes for NewsAPI
+        const countryCodeMap = {
+            'united states': 'us', 'usa': 'us', 'america': 'us',
+            'india': 'in', 'united kingdom': 'gb', 'uk': 'gb',
+            'canada': 'ca', 'australia': 'au', 'bangladesh': 'bd',
+            'germany': 'de', 'france': 'fr', 'japan': 'jp',
+            'china': 'cn', 'russia': 'ru', 'brazil': 'br',
+            'italy': 'it', 'spain': 'es', 'mexico': 'mx',
+            'indonesia': 'id', 'pakistan': 'pk', 'nigeria': 'ng',
+            // Add more as needed
+        };
+
+
+        // --- Utility Functions ---
+
+        /**
+         * Generates a UUID.
+         * @returns {string} A unique ID.
+         */
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        /**
+         * Shows a custom message box instead of alert().
+         * @param {string} title - The title of the message box.
+         * @param {string} message - The content message.
+         */
+        function showMessageBox(title, message) {
+            messageBoxTitle.textContent = title;
+            messageBoxContent.textContent = message;
+            messageBoxOverlay.style.display = 'flex';
+        }
+
+        /**
+         * Hides the custom message box.
+         */
+        function hideMessageBox() {
+            messageBoxOverlay.style.display = 'none';
+        }
+
+        messageBoxCloseButton.addEventListener('click', hideMessageBox);
+
+
+        /**
+         * Adds a message to the chat display and saves to history.
+         * @param {string} message - The message content.
+         * @param {string} sender - 'user' or 'bot'.
+         * @param {boolean} [isRenderOnly=false] - True if this message is only for rendering (e.g., from history load), false if new.
+         */
+        function addMessageToChat(message, sender, isRenderOnly = false) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message-bubble');
+            if (sender === 'user') {
+                messageElement.classList.add('message-user');
+            } else {
+                messageElement.classList.add('message-bot');
+            }
+
+            const textContent = document.createElement('p');
+            // Advanced Markdown to HTML conversion
+            let htmlMessage = message;
+
+            // Headings
+            htmlMessage = htmlMessage.replace(/^###### (.*$)/gim, '<h6>$1</h6>');
+            htmlMessage = htmlMessage.replace(/^##### (.*$)/gim, '<h5>$1</h5>');
+            htmlMessage = htmlMessage.replace(/^#### (.*$)/gim, '<h4>$1</h4>');
+            htmlMessage = htmlMessage.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+            htmlMessage = htmlMessage.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+            htmlMessage = htmlMessage.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+
+            // Bold and Italic
+            htmlMessage = htmlMessage.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Bold
+            htmlMessage = htmlMessage.replace(/\*(.*?)\*/g, '<em>$1</em>'); // Italic
+
+            // Lists (handle both unordered and ordered)
+            // Convert list items to <li> tags first
+            htmlMessage = htmlMessage.replace(/^- (.*)/gm, '<li>$1</li>');
+            htmlMessage = htmlMessage.replace(/^\d+\. (.*)/gm, '<li>$1</li>');
+
+            // Wrap consecutive <li> tags in <ul> or <ol>
+            htmlMessage = htmlMessage.replace(/(<li>.*?<\/li>)+/gs, (match) => {
+                if (match.startsWith('<li>')) {
+                    // Check if it's an ordered list (starts with number. in original markdown)
+                    // This is a simplification; a full markdown parser would be more robust
+                    const isOrdered = match.split('\n')[0].match(/^\d+\./);
+                    return isOrdered ? `<ol>${match}</ol>` : `<ul>${match}</ul>`;
+                }
+                return match;
+            });
+
+
+            // Code blocks (multiline)
+            htmlMessage = htmlMessage.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+            // Inline code
+            htmlMessage = htmlMessage.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+            // Line breaks
+            htmlMessage = htmlMessage.replace(/\n/g, '<br>');
+
+
+            textContent.innerHTML = htmlMessage;
+            messageElement.appendChild(textContent);
+
+            if (!isRenderOnly) { // Only add to current conversation history if it's a new message
+                let currentConv = conversations.find(conv => conv.id === currentConversationId);
+                if (!currentConv) {
+                    // This should ideally not happen if newChat() is called correctly
+                    // but as a fallback, create a new conversation
+                    startNewChat(false); // Create without greeting
+                    currentConv = conversations.find(conv => conv.id === currentConversationId);
+                }
+                // FIX: Change 'bot' role to 'model' for Gemini API compatibility
+                currentConv.messages.push({ role: sender === 'user' ? 'user' : 'model', parts: [{ text: message }] });
+                currentConv.timestamp = Date.now(); // Update timestamp on new message
+
+                // If it's the first user message, set the conversation title
+                if (sender === 'user' && currentConv.messages.filter(m => m.role === 'user').length === 1) {
+                    currentConv.title = message.substring(0, 30) + (message.length > 30 ? '...' : '');
+                }
+                saveConversations(); // Save all conversations
+                renderSidebarHistory(); // Update sidebar to reflect new message/title
+            }
+            
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+        }
+
+        /**
+         * Saves all conversations to localStorage.
+         */
+        function saveConversations() {
+            try {
+                localStorage.setItem('conversations', JSON.stringify(conversations));
+            } catch (e) {
+                console.error("Error saving conversations to localStorage:", e);
+            }
+        }
+
+        /**
+         * Loads conversations from localStorage and renders the current one.
+         */
+        function loadConversations() {
+            try {
+                const storedConversations = localStorage.getItem('conversations');
+                if (storedConversations) {
+                    conversations = JSON.parse(storedConversations);
+                    // Sort by most recent first
+                    conversations.sort((a, b) => b.timestamp - a.timestamp);
+                    
+                    if (conversations.length > 0) {
+                        currentConversationId = conversations[0].id; // Load the most recent conversation
+                        renderCurrentChatMessages();
+                        renderSidebarHistory();
+                        return true;
+                    }
+                }
+            } catch (e) {
+                console.error("Error loading conversations from localStorage:", e);
+                localStorage.removeItem('conversations'); // Clear corrupted data
+                conversations = [];
+            }
+            return false;
+        }
+
+        /**
+         * Renders messages for the currently active conversation.
+         */
+        function renderCurrentChatMessages() {
+            chatMessages.innerHTML = ''; // Clear existing messages
+            const currentConv = conversations.find(conv => conv.id === currentConversationId);
+            if (currentConv && currentConv.messages) {
+                currentConv.messages.forEach(msg => {
+                    // Use 'user' for user messages, 'bot' for model messages for styling
+                    const senderForStyling = msg.role === 'user' ? 'user' : 'bot';
+                    addMessageToChat(msg.parts[0].text, senderForStyling, true); // isRenderOnly = true
+                });
+            } else {
+                // If no current conversation or messages, add a greeting
+                addMessageToChat(getGreeting() + ", I'm XaioninAI, your AI assistant for global readiness and daily assistance. How can I help you today? 👋🤖", 'bot', true);
+            }
+        }
+
+        /**
+         * Renders the list of conversations in the sidebar.
+         */
+        function renderSidebarHistory() {
+            sidebarHistory.innerHTML = ''; // Clear existing history items
+            conversations.sort((a, b) => b.timestamp - a.timestamp); // Keep sorted by recent
+
+            conversations.forEach(conv => {
+                const itemElement = document.createElement('div');
+                itemElement.classList.add('sidebar-item', 'cursor-pointer');
+                if (conv.id === currentConversationId) {
+                    itemElement.classList.add('active');
+                }
+                
+                // Use the conversation title, or a default if not set (for new empty chats)
+                const displayTitle = conv.title || `New Chat (${new Date(conv.timestamp).toLocaleDateString()})`;
+                itemElement.innerHTML = `<span class="truncate">${displayTitle}</span>`; // Truncate long titles
+
+                itemElement.addEventListener('click', () => {
+                    currentConversationId = conv.id;
+                    renderCurrentChatMessages();
+                    renderSidebarHistory(); // Re-render to highlight active item
+                    closeSidebar(); // Close sidebar after selecting chat
+                });
+                sidebarHistory.appendChild(itemElement);
+            });
+        }
+
+        /**
+         * Starts a new chat conversation.
+         * @param {boolean} withGreeting - Whether to add a greeting message to the new chat.
+         */
+        function startNewChat(withGreeting = true) {
+            const newConv = {
+                id: generateUUID(),
+                title: 'New Chat', // Temporary title, will update on first user message
+                messages: [],
+                timestamp: Date.now()
+            };
+            conversations.unshift(newConv); // Add to the beginning for easy access
+            currentConversationId = newConv.id;
+            saveConversations();
+            renderCurrentChatMessages(); // Render empty chat
+            renderSidebarHistory(); // Update sidebar
+            if (withGreeting) {
+                addMessageToChat(getGreeting() + ", I'm XaioninAI, your AI assistant for global readiness and daily assistance. How can I help you today? 👋🤖", 'bot');
+            }
+            chatInput.focus();
+        }
+
+
+        /**
+         * Clears messages of the currently active conversation.
+         */
+        function clearCurrentChat() {
+            const currentConvIndex = conversations.findIndex(conv => conv.id === currentConversationId);
+            if (currentConvIndex !== -1) {
+                conversations[currentConvIndex].messages = []; // Clear messages
+                conversations[currentConvIndex].timestamp = Date.now(); // Update timestamp
+                conversations[currentConvIndex].title = 'Cleared Chat'; // Reset title
+                saveConversations();
+                renderCurrentChatMessages(); // Re-render empty chat
+                renderSidebarHistory(); // Update sidebar title
+                addMessageToChat("Current chat history cleared. How can I help you start fresh? 🧹✨", 'bot');
+            } else {
+                showMessageBox("Error", "No active chat to clear. Please start a new chat. 😔");
+            }
+        }
+
+        /**
+         * Loads user memory from localStorage.
+         */
+        function saveUserMemory() {
+            try {
+                localStorage.setItem('userMemory', JSON.stringify(userMemory));
+            } catch (e) {
+                console.error("Error saving user memory to localStorage:", e);
+            }
+        }
+
+        /**
+         * Loads user memory from localStorage.
+         */
+        function loadUserMemory() {
+            try {
+                const storedMemory = localStorage.getItem('userMemory');
+                if (storedMemory) {
+                    userMemory = JSON.parse(storedMemory);
+                    console.log("User memory loaded:", userMemory);
+                }
+            } catch (e) {
+                console.error("Error loading user memory from localStorage:", e);
+                localStorage.removeItem('userMemory'); // Clear corrupted memory
+                userMemory = {};
+            }
+        }
+
+        /**
+         * Shows or hides the loading indicator.
+         * @param {boolean} show - True to show, false to hide.
+         */
+        function showLoadingIndicator(show) {
+            if (show) {
+                loadingIndicator.classList.add('active');
+            } else {
+                loadingIndicator.classList.remove('active');
+            }
+        }
+
+        function randomChoice(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        /**
+         * Gets a time-based greeting.
+         * @returns {string} The greeting string.
+         */
+        function getGreeting() {
+            const hour = new Date().getHours();
+            if (hour < 12) {
+                return "Good morning";
+            } else if (hour < 18) {
+                return "Good afternoon";
+            } else {
+                return "Good evening";
+            }
+        }
+
+        /**
+         * Checks if a given command string looks like a mathematical calculation.
+         * Supports basic arithmetic and optional '?' at the end.
+         * @param {string} command - The user's input command.
+         * @returns {boolean} - True if it's likely a calculation, false otherwise.
+         */
+        function isCalculation(command) {
+            // Remove "what is", "calculate", and "?" for cleaner regex matching
+            let cleanedCommand = command.toLowerCase()
+                .replace(/^(what is|calculate)\s+/, '')
+                .replace(/\?$/, '')
+                .trim();
+
+            // Regex to match numbers, operators (+, -, *, /), parentheses, and spaces.
+            // Ensures it starts and ends with a number or parenthesis.
+            const calculationRegex = /^[\d\s\(\)]*[\d\.]+\s*[\+\-\*\/]\s*[\d\.]+\s*[\d\s\(\)]*$/;
+            return calculationRegex.test(cleanedCommand);
+        }
+
+        /**
+         * Gets the current time in Bangladesh Standard Time (BST).
+         * @returns {string} - Formatted time string for Bangladesh.
+         */
+        function getBangladeshTime() {
+            const options = {
+                timeZone: 'Asia/Dhaka',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            };
+            const formatter = new Intl.DateTimeFormat('en-US', options);
+            const bangladeshTime = formatter.format(new Date());
+            return `The current time in Bangladesh is ${bangladeshTime}. ⏰`;
+        }
+
+        /**
+         * Adds a medical disclaimer to a response.
+         * @param {string} response - The original AI response.
+         * @returns {string} - The response with the disclaimer appended.
+         */
+        function addMedicalDisclaimer(response) {
+            return `${response}\n\n**Disclaimer:** This information is for general knowledge and first aid tips only. It is NOT a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of a qualified healthcare professional for any medical conditions or emergencies. ⚠️`;
+        }
+
+        /**
+         * Extracts a city name from a command string.
+         * Tries to be flexible with common phrasing.
+         * @param {string} command - The user's input command.
+         * @returns {string|null} - The extracted city name or null if not found.
+         */
+        function extractCityName(command) {
+            let cleanedCommand = command.toLowerCase();
+
+            // Define common weather-related phrases and temporal words to remove
+            const phrasesToRemove = [
+                'weather in', 'weather for', 'temperature in', 'how is the weather in',
+                'what\'s the weather in', 'weather today in', 'weather now in', 'weather',
+                'temperature', 'how is the weather', 'what\'s the weather', 'today', 'now',
+                'current', 'in', 'for', 'what'
+            ];
+
+            // Remove these phrases
+            phrasesToRemove.forEach(phrase => {
+                cleanedCommand = cleanedCommand.replace(new RegExp(`\\b${phrase}\\b`, 'g'), ' ').trim();
+            });
+
+            // Remove extra spaces and leading/trailing punctuation
+            cleanedCommand = cleanedCommand.replace(/\s+/g, ' ').replace(/^[.,;!?"'-]+|[.,;!?"'-]+$/g, '').trim();
+
+            // If after cleaning, there's a non-empty string, assume it's the city.
+            // We rely on the API to validate if it's a real city.
+            if (cleanedCommand.length > 0) {
+                return cleanedCommand;
+            }
+
+            return null;
+        }
+
+
+        /**
+         * Extracts a division name from a command string.
+         * Tries to be flexible with common phrasing.
+         * @param {string} command - The user's input command.
+         * @returns {string|null} - The extracted division name (normalized) or null if not found.
+         */
+        function extractDivisionName(command) {
+            let cleanedCommand = command.toLowerCase();
+
+            const phrasesToRemove = [
+                'disaster profile for', 'disasters in', 'info on disasters in', 'risks in',
+                'shelters in', 'find shelters in', 'where are shelters in', 'list shelters near',
+                'division', 'district', 'for', 'in', 'near'
+            ];
+
+            phrasesToRemove.forEach(phrase => {
+                cleanedCommand = cleanedCommand.replace(new RegExp(`\\b${phrase}\\b`, 'g'), ' ').trim();
+            });
+
+            cleanedCommand = cleanedCommand.replace(/\s+/g, ' ').replace(/^[.,;!?"'-]+|[.,;!?"'-]+$/g, '').trim();
+
+            const knownDivisions = Object.keys(disaster_profiles_data); // ['sylhet', 'rajshahi', ...]
+            for (const division of knownDivisions) {
+                if (cleanedCommand.includes(division)) {
+                    return division;
+                }
+            }
+            return null;
+        }
+
+        /**
+         * Extracts a disease name from a command string.
+         * @param {string} command - The user's input command.
+         * @returns {string|null} - The extracted disease name (normalized) or null if not found.
+         */
+        function extractDiseaseName(command, knowledgeBase) {
+            let cleanedCommand = command.toLowerCase();
+            const phrasesToRemove = [
+                'treatment of', 'cure for', 'how to treat', 'my plant has', 'crop problem',
+                'what\'s wrong with my crops', 'diagnose crop problem', 'disease', 'problem', 'for', 'of'
+            ];
+
+            phrasesToRemove.forEach(phrase => {
+                    cleanedCommand = cleanedCommand.replace(new RegExp(`\\b${phrase}\\b`, 'g'), ' ').trim();
+            });
+            cleanedCommand = cleanedCommand.replace(/\s+/g, ' ').replace(/^[.,;!?"'-]+|[.,;!?"'-]+$/g, '').trim();
+
+            const knownDiseases = Object.keys(knowledgeBase);
+            for (const disease of knownDiseases) {
+                if (cleanedCommand.includes(disease)) {
+                    return disease;
+                }
+            }
+            return null;
+        }
+
+
+        // --- API & Core Logic Functions (JavaScript versions) ---
+
+        /**
+         * Fetches a response from the Gemini API with retry mechanism.
+         * @param {string} prompt - The user's prompt.
+         * @param {number} [retries=3] - Number of times to retry the API call.
+         * @param {number} [delay=1000] - Initial delay in milliseconds for exponential backoff.
+         * @returns {Promise<string>} - The Gemini API response.
+         */
+        async function getGeminiResponse(prompt, retries = 3, delay = 1000) {
+            if (!GOOGLE_API_KEY) {
+                return "Sorry, my advanced knowledge base (Gemini) is not configured. Please ensure GOOGLE_API_KEY is set correctly with your actual key. 🔑";
+            }
+
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const payloadContents = [];
+
+                    // Get messages from the current conversation only
+                    const currentConv = conversations.find(conv => conv.id === currentConversationId);
+                    const messagesForGemini = currentConv ? currentConv.messages : [];
+
+                    // Limit to last 10 messages (5 turns of conversation) to manage token usage
+                    const recentChatHistory = messagesForGemini.slice(Math.max(0, messagesForGemini.length - 10));
+                    
+                    // Gemini API expects 'user' and 'model' roles. Reconstruct parts for history.
+                    recentChatHistory.forEach(msg => {
+                        const parts = [];
+                        msg.parts.forEach(part => {
+                            if (part.text) parts.push({ text: part.text });
+                        });
+                        payloadContents.push({ role: msg.role, parts: parts });
+                    });
+
+                    // Add the current user prompt with emoji directive
+                    const userParts = [{ text: `${prompt} (Please include relevant emojis in your response to make it more engaging and organized, especially for titles, lists, and key information.)` }];
+                    payloadContents.push({ role: "user", parts: userParts });
+
+                    const payload = { contents: payloadContents };
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GOOGLE_API_KEY}`;
+
+                    console.log(`Gemini API Request (Attempt ${i + 1}):`, JSON.stringify(payload, null, 2)); // Debugging: Log payload
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        console.error('Gemini API HTTP Error:', response.status, errorText);
+
+                        // If it's a 503 (Service Unavailable) and not the last retry, wait and retry
+                        if (response.status === 503 && i < retries - 1) {
+                            console.warn(`Model overloaded (503). Retrying in ${delay / 1000} seconds...`);
+                            await new Promise(res => setTimeout(res, delay));
+                            delay *= 2; // Exponential backoff
+                            continue; // Go to next iteration of the loop (retry)
+                        } else {
+                            // For other errors or last retry, throw the error
+                            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                        }
+                    }
+
+                    const result = await response.json();
+                    console.log("Gemini API Response:", JSON.stringify(result, null, 2)); // Debugging: Log full response
+
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        return result.candidates[0].content.parts[0].text;
+                    } else {
+                        console.error('Gemini API response structure unexpected or empty content:', result);
+                        return "Sorry, I couldn't get a clear response from my knowledge base. The AI might not have generated specific content for this query. 😔";
+                    }
+                }
+                catch (e) {
+                    console.error('Error calling Gemini API:', e);
+                    // If it's the last retry or a non-503 error, return the error message to the user
+                    return `Sorry, I encountered an error when trying to use my knowledge base: ${e.message}. Please try again later. 🛠️`;
+                }
+            }
+            // This part should ideally not be reached if retries are handled, but as a fallback:
+            return "Sorry, I'm currently unable to connect to my knowledge base. Please try again in a moment. 🌐";
+        }
+
+        /**
+         * Fetches latest news headlines from NewsAPI.
+         * @param {string} [countryQuery=null] - Optional country code (e.g., 'us', 'gb') or full country name (e.g., 'Bangladesh').
+         * @param {number} [numHeadlines=5] - Number of headlines to fetch.
+         * @returns {Promise<string>} - Formatted news headlines.
+         */
+        async function getLatestNews(countryQuery = null, numHeadlines = 5) {
+            if (!NEWS_API_KEY) {
+                return "Sorry, the news service is not available. My API key is missing or invalid. 📰🔑";
+            }
+
+            let url = "";
+            let countryCode = null;
+
+            if (countryQuery) {
+                // Try to map full country name to code
+                const normalizedCountryQuery = countryQuery.toLowerCase().trim();
+                countryCode = countryCodeMap[normalizedCountryQuery];
+
+                // If not found in map, check if it's already a 2-letter code
+                if (!countryCode && normalizedCountryQuery.length === 2) {
+                    countryCode = normalizedCountryQuery;
+                }
+            }
+
+            if (countryCode) {
+                url = `https://newsapi.org/v2/top-headlines?country=${countryCode}&apiKey=${NEWS_API_KEY}`;
+            } else if (countryQuery) {
+                // Fallback to searching all news for the query if no specific country code found
+                url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(countryQuery)}&language=en&apiKey=${NEWS_API_KEY}`;
+            } else {
+                url = `https://newsapi.org/v2/top-headlines?language=en&apiKey=${NEWS_API_KEY}`;
+            }
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Error fetching news: ${response.status} - ${errorData.message || 'Unknown error'} 🚨`);
+                }
+                const newsData = await response.json();
+
+                if (newsData.status === 'ok') {
+                    const headlines = newsData.articles.map(article => article.title);
+                    if (!headlines.length) {
+                        return `No news articles found for your query about "${countryQuery || 'general topics'}". 😔`;
+                    }
+                    return "Here are the top headlines: " + headlines.slice(0, numHeadlines).join(" | ") + " 📰✨";
+                } else {
+                    return `Error fetching news: ${newsData.message || 'Unknown error from NewsAPI'} 🚫`;
+                }
+            } catch (e) {
+                console.error('Error fetching news:', e);
+                return `An error occurred while fetching news: ${e.message}. Please try again later. 🛠️`;
+            }
+        }
+
+        /**
+         * Fetches current weather data for a specified city from OpenWeatherMap API.
+         * @param {string} city - The city name.
+         * @returns {Promise<string>} - Formatted weather information.
+         */
+        async function getWeatherData(city) {
+            if (!OPENWEATHER_API_KEY) {
+                console.error("OpenWeatherMap API Key is missing or invalid.");
+                return "Sorry, the weather service is not available. My API key is missing or invalid. Please check the console for more details. 🔑☁️";
+            }
+
+            // Log the city name received by this function
+            console.log(`getWeatherData received city: "${city}"`);
+
+            if (!city) {
+                return "I couldn't identify a city name in your request. Please specify the city for weather information (e.g., 'weather in London' or just 'London'). 📍";
+            }
+
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${OPENWEATHER_API_KEY}`;
+            console.log(`Attempting to fetch weather from URL: ${url}`); // Debugging: See what URL is being called
+            try {
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error(`OpenWeatherMap API HTTP Error for "${city}": Status ${response.status}, Message: ${errorData.message}`);
+
+                    if (response.status === 401) {
+                        return `Sorry, there's an issue with the weather service. The API key might be invalid or improperly configured. Please check the console for details. 🛠️`;
+                    } else if (response.status === 404) {
+                        return `Sorry, I couldn't find weather data for "${city}". Please check the city name and try again. 🤷‍♀️`;
+                    } else {
+                        return `An error occurred while fetching weather for ${city}: ${errorData.message || 'Unknown error'}. Please try again later. 🚨`;
+                    }
+                }
+                const weatherData = await response.json();
+                console.log("OpenWeatherMap API Raw Response:", weatherData); // Debugging: See raw weather data
+
+                if (weatherData.cod === 200) {
+                    const temperature = weatherData.main.temp - 273.15; // Convert Kelvin to Celsius
+                    const feelsLike = weatherData.main.feels_like - 273.15;
+                    const humidity = weatherData.main.humidity;
+                    const description = weatherData.weather[0].description;
+                    const windSpeed = weatherData.wind.speed; // m/s
+                    const windDirectionDeg = weatherData.wind.deg; // degrees
+
+                    // Convert wind direction to cardinal points
+                    const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+                    const windDirection = directions[Math.round(windDirectionDeg / 45) % 8];
+
+                    return `The current weather in ${weatherData.name} is **${description}**. ${getWeatherEmoji(description)} ` +
+                           `Temperature: **${temperature.toFixed(1)}°C** (feels like ${feelsLike.toFixed(1)}°C). ` +
+                           `Humidity: **${humidity}%**. ` +
+                           `Wind: **${windSpeed.toFixed(1)} m/s ${windDirection}**. 🌬️`;
+                } else {
+                    // This block might be redundant if !response.ok catches most errors, but good for explicit API errors
+                    console.error(`OpenWeatherMap API returned unexpected 'cod': ${weatherData.cod}, Message: ${weatherData.message}`);
+                    return `Sorry, an unexpected error occurred while fetching weather for ${city}: ${weatherData.message || 'Unknown error'} 😔`;
+                }
+            } catch (e) {
+                console.error('Error in getWeatherData:', e);
+                return `An error occurred while fetching weather data: ${e.message}. Please try again later. 🛠️`;
+            }
+        }
+
+        /**
+         * Returns an emoji based on weather description.
+         * @param {string} description - Weather description from API.
+         * @returns {string} - Corresponding emoji.
+         */
+        function getWeatherEmoji(description) {
+            const lowerDesc = description.toLowerCase();
+            if (lowerDesc.includes('clear') || lowerDesc.includes('sun')) return '☀️';
+            if (lowerDesc.includes('cloud')) return '☁️';
+            if (lowerDesc.includes('rain')) return '🌧️';
+            if (lowerDesc.includes('storm') || lowerDesc.includes('thunder')) return '⛈️';
+            if (lowerDesc.includes('snow')) return '❄️';
+            if (lowerDesc.includes('mist') || lowerDesc.includes('fog')) return '🌫️';
+            return '🌡️'; // Default temperature emoji
+        }
+
+        /**
+         * Simulates a request for health monitoring input.
+         * @returns {string} - Instructions for health parameter input.
+         */
+        function handleHealthMonitor() {
+            return addMedicalDisclaimer("For health monitoring, I'd typically ask for heart rate, oxygen level, temperature, blood pressure, diabetes status, and blood sugar. Since I can't take direct voice input for multiple parameters in this chat, please provide them in a single message like: 'My heart rate is 75, oxygen 98, temp 37, BP 120/80, diabetes no, blood sugar 90'. ❤️‍🩹📊");
+        }
+
+        /**
+         * Parses health parameters from a given command string and provides a health report.
+         * @param {string} command - The user's input command.
+         * @returns {string} - A health report with suggestions.
+         */
+        function parseHealthInput(command) {
+            const hr_match = command.match(/heart rate is (\d+)/);
+            const oxygen_match = command.match(/oxygen (\d+)/);
+            const temp_match = command.match(/temp (\d+(\.\d+)?)/);
+            const bp_match = command.match(/bp (\d+\/\d+)/);
+            const diabetes_match = command.match(/diabetes (yes|no)/);
+            const bs_match = command.match(/blood sugar (\d+)/);
+
+            const heart_rate = hr_match ? parseInt(hr_match[1]) : null;
+            const oxygen_level = oxygen_match ? parseInt(oxygen_match[1]) : null;
+            const temperature = temp_match ? parseFloat(temp_match[1]) : null;
+            const blood_pressure = bp_match ? bp_match[1] : null;
+            const diabetes = diabetes_match ? diabetes_match[1] : null;
+            const blood_sugar = bs_match ? parseInt(bs_match[1]) : null;
+
+            const hr_status = heart_rate !== null ? (heart_rate >= 60 && heart_rate <= 100 ? "normal" : "abnormal") : "not provided";
+            const oxygen_status = oxygen_level !== null ? (oxygen_level >= 95 ? "normal" : "low") : "not provided";
+            const temp_status = temperature !== null ? (temperature >= 36.1 && temperature <= 37.2 ? "normal" : "abnormal") : "not provided";
+            const bp_status = blood_pressure === "120/80" ? "normal" : (blood_pressure ? "abnormal" : "not provided");
+            const diabetes_status = diabetes === "no" ? "normal" : (diabetes === "yes" ? "abnormal" : "not provided");
+            const blood_sugar_status = blood_sugar !== null ? (blood_sugar >= 70 && blood_sugar <= 100 ? "normal" : "abnormal") : "not provided";
+
+            let overall_health_report = (
+                `Heart rate is ${hr_status} ${hr_status === 'normal' ? '✅' : '❗'}, oxygen level is ${oxygen_status} ${oxygen_status === 'normal' ? '✅' : '❗'}, ` +
+                `temperature is ${temp_status} ${temp_status === 'normal' ? '✅' : '❗'}, blood pressure is ${bp_status} ${bp_status === 'normal' ? '✅' : '❗'}, ` +
+                `diabetes status is ${diabetes_status} ${diabetes_status === 'normal' ? '✅' : '❗'}, blood sugar level is ${blood_sugar_status} ${blood_sugar_status === 'normal' ? '✅' : '❗'}.`
+            );
+
+            const disease_suggestions = [];
+            if (hr_status === "abnormal") {
+                disease_suggestions.push("Abnormal heart rate could indicate arrhythmias, heart disease, or other cardiac conditions. ❤️‍🩹");
+            }
+            if (oxygen_status === "low") {
+                disease_suggestions.push("Low oxygen levels may suggest respiratory issues. 🌬️");
+            }
+            if (temp_status === "abnormal") {
+                disease_suggestions.push("Abnormal temperature could indicate fever or hypothermia. 🌡️");
+            }
+            if (bp_status === "abnormal") {
+                disease_suggestions.push("Abnormal blood pressure needs medical evaluation. 🩸");
+            }
+            if (diabetes_status === "abnormal") {
+                disease_suggestions.push("If you have diabetes, ensure you are managing your condition. 🍬");
+            }
+            if (blood_sugar_status === "abnormal") {
+                disease_suggestions.push("Abnormal blood sugar levels require attention. 🩸");
+            }
+
+            if (disease_suggestions.length > 0) {
+                return addMedicalDisclaimer(`**Health Report:** ${overall_health_report}\n\n**Suggestions:** ${disease_suggestions.join(" ")} Please consult a medical professional for accurate diagnosis and treatment. 👨‍⚕️🩺`);
+            } else {
+                return addMedicalDisclaimer(`**Health Report:** ${overall_health_report}\n\nYour parameters seem to be within normal ranges. Always consult a medical professional for a comprehensive health check. ✅👨‍⚕️`);
+            }
+        }
+
+        /**
+         * Displays available doctor profiles.
+         * @returns {string} - Formatted list of doctor profiles.
+         */
+        function getDoctorProfiles() {
+            if (doctor_profiles_data.length === 0) {
+                return "No doctor profiles are currently available. Please check back later. 😔";
+            }
+            let response = "Here are some available doctor profiles: 👩‍⚕️👨‍⚕️\n\n";
+            doctor_profiles_data.forEach(doctor => {
+                response += `**Dr. ${doctor.name}**\n`;
+                response += `- Specialization: ${doctor.specialization} 🩺\n`;
+                response += `- Location: ${doctor.location} 📍\n`;
+                response += `- Availability: ${doctor.availability} 🗓️\n`;
+                response += `- Contact: ${doctor.contact} 📞\n\n`;
+            });
+            return addMedicalDisclaimer(response + "For appointments or further details, please contact them directly. 🤝");
+        }
+
+        /**
+         * Fetches crop suggestions from Gemini API for agricultural purposes.
+         * This function is now called directly by processCommand.
+         * @param {string} cropLoss - Estimated crop loss percentage.
+         * @param {string} soilType - Type of soil.
+         * @returns {Promise<string>} - AI-generated crop suggestions.
+         */
+        async function getAgriculturalAiSuggestion(cropLoss, soilType) {
+            if (!GOOGLE_API_KEY) { // Using the main GOOGLE_API_KEY now
+                console.error("Agricultural AI API key is missing.");
+                return "Sorry, the Agricultural AI is not configured. Please ensure your Gemini API key is correctly set. 🔑🌾";
+            }
+
+            const prompt = `Given a ${cropLoss}% crop loss and ${soilType} soil, suggest sustainable and resilient crops suitable for post-disaster agriculture, considering flood tolerance and local conditions. Also, suggest any immediate agricultural recovery steps. Provide the response as a well-formatted paragraph with bullet points if necessary. Include relevant emojis in your response.`;
+            console.log("Agricultural AI: Sending prompt:", prompt); // Debugging
+
+            try {
+                // For agricultural suggestions, we might not need full chat history,
+                // but for consistency, we'll pass a small context or just the prompt.
+                // Let's just pass the direct prompt for this specific function.
+                const chatHistoryForAgri = [{ role: "user", parts: [{ text: prompt }] }];
+                const payload = { contents: chatHistoryForAgri };
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GOOGLE_API_KEY}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Agricultural AI HTTP Error:', response.status, errorText);
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText} 🚨`);
+                }
+
+                const result = await response.json();
+                console.log("Agricultural AI: Raw Response:", result); // Debugging
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const aiText = result.candidates[0].content.parts[0].text;
+                    console.log("Agricultural AI: Received text:", aiText); // Debugging
+                    return aiText + " 🌱🚜";
+                } else {
+                    console.error('Agricultural AI: Response structure unexpected or empty content:', result);
+                    return "Sorry, the Agricultural AI couldn't get a clear response. The AI might not have generated specific content for this query. 😔";
+                }
+            } catch (e) {
+                console.error('Agricultural AI: Error calling API:', e);
+                return `Sorry, an error occurred with the Agricultural AI: ${e.message}. Please try again later. 🛠️`;
+            }
+        }
+
+
+        /**
+         * Handles the core logic for processing user commands.
+         * @param {string} command - The user's input command.
+         * @returns {Promise<string>} - The bot's response.
+         */
+        async function processCommand(command) {
+            const lowerCommand = command.toLowerCase().trim();
+
+            // --- General Commands ---
+            // Specific XaioninAI self-identification and persona responses
+            if (lowerCommand.match(/^(who are you|what are you|tell me about yourself|describe yourself|your purpose)$/)) {
+                return "Hello! I'm XaioninAI, your global AI assistant for readiness and daily assistance. I was developed by a passionate team in Bangladesh 🇧🇩, and my advanced knowledge and conversational abilities are powered by Google's Gemini. I'm here to help everyone around the world 🌍 with information on disaster preparedness 🚨, general knowledge 🧠, medical tips 💊, agricultural advice 🌾, and more. How can I assist you today? ✨";
+            }
+            if (lowerCommand.includes('your name')) {
+                return "My name is XaioninAI. It's a pleasure to assist you! 🤖";
+            }
+            if (lowerCommand.includes('hello baby')) {
+                return "Hello there! I'm XaioninAI. While I don't have personal feelings or relationships, I'm here to help you with a wide range of information and tasks for global readiness. How can I assist you today? 😊";
+            }
+
+
+            // General greetings
+            if (['hi', 'hello', 'hey', 'greetings', 'howdy', 'hiya', "what's up"].includes(lowerCommand)) {
+                return randomChoice(intro_responses);
+            }
+            
+            // List commands
+            if (lowerCommand.match(/^(what can you do|list commands|help|commands)$/)) {
+                let response = "I can do many things! Here are some commands: 📜\n\n";
+                for (const category in SUPPORTED_COMMANDS) {
+                    response += `**${category}**:\n`;
+                    SUPPORTED_COMMANDS[category].forEach(cmd => {
+                        response += `- ${cmd}\n`;
+                    });
+                    response += "\n";
+                }
+                return response;
+            }
+            // Clear Chat - now handled by clearCurrentChat()
+            if (lowerCommand === 'clear chat') {
+                clearCurrentChat();
+                return; // Response handled by clearCurrentChat
+            }
+            // Exit
+            if (['exit', 'goodbye', 'ok bye'].includes(lowerCommand)) {
+                return "Goodbye! Have a great day! 👋😊";
+            }
+
+            // --- Information & Search ---
+            if (lowerCommand.startsWith('who is ') || lowerCommand.startsWith('tell me about ')) {
+                const query = lowerCommand.replace(/^(who is|tell me about)\s+/, '').trim();
+                if (!query) {
+                    return "Please tell me who or what you'd like me to tell you about. For example, 'tell me about Albert Einstein' or 'who is Isaac Newton'. 🧑‍🏫";
+                }
+                if (knowledge_base[query]) {
+                    return knowledge_base[query];
+                } else {
+                    return await getGeminiResponse(`Tell me about ${query}.`);
+                }
+            }
+            if (lowerCommand.startsWith('search for ') || lowerCommand.startsWith('google search ')) {
+                const query = lowerCommand.replace(/^(search for|google search)\s+/, '').trim();
+                if (!query) {
+                    return "What would you like me to search for? Please provide your search query. 🔍";
+                }
+                return `Searching Google for "${query}"... (This is a simulated search. In a real app, you'd integrate a search API or open a new tab.) 🌐`;
+            }
+            if (lowerCommand.startsWith('play ')) {
+                const song = lowerCommand.replace('play ', '').trim();
+                if (!song) {
+                    return "What song would you like me to play? Please tell me the song name. 🎵";
+                }
+                return `Searching YouTube for "${song}"... (This is a simulated search. In a real app, you'd integrate a YouTube API or open a new tab.) 📺`;
+            }
+            if (lowerCommand.startsWith('news update')) {
+                const parts = lowerCommand.split('in ');
+                const countryQuery = parts.length > 1 ? parts[1].trim() : null;
+                return await getLatestNews(countryQuery);
+            }
+            // Enhanced time handling
+            if (lowerCommand.match(/^(tell me the time|what time is it|time now|current time in|time in|what is the time in)\s*([\w\s]+)?$/)) {
+                const match = lowerCommand.match(/(?:time in|current time in|what is the time in)\s+([\w\s]+)$/);
+                if (match && match[1]) {
+                    const locationQuery = match[1].trim().toLowerCase();
+                    // For now, we only support Bangladesh time. Explain limitation for others.
+                    if (locationQuery.includes('bangladesh') || locationQuery.includes('dhaka')) {
+                        return getBangladeshTime();
+                    } else {
+                        return `I can currently only provide the time for Bangladesh 🇧🇩. For other locations like "${locationQuery}", I would need access to a global timezone database, which isn't directly available in this client-side application. You can check a website like timeanddate.com for that. 🌐⏰`;
+                    }
+                }
+                // Default if no specific location is mentioned or if it's just a general time query
+                return `The current date is ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} and ${getBangladeshTime()}`;
+            }
+            if (lowerCommand.match(/^(tell me the date|date today|what is today's date)$/)) {
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                return `Today's date is ${new Date().toLocaleDateString('en-US', options)}. 📅`;
+            }
+            if (lowerCommand.includes('what is the current date and time')) {
+                const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+                const timeOptions = { timeZone: 'Asia/Dhaka', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+                const date = new Date().toLocaleDateString('en-US', dateOptions);
+                const time = new Intl.DateTimeFormat('en-US', timeOptions).format(new Date());
+                return `The current date is ${date} and the time in Bangladesh is ${time}. 🗓️⏰`;
+            }
+
+            // Improved weather handling
+            if (lowerCommand.includes('weather') || lowerCommand.includes('temperature') || lowerCommand.includes('how\'s the weather')) {
+                const city = extractCityName(lowerCommand);
+                if (city) {
+                    return await getWeatherData(city);
+                } else {
+                    return "Please tell me which city you want the weather for. For example, 'weather in Dhaka' or 'temperature in Rajshahi'. 🏙️☀️";
+                }
+            }
+
+            if (lowerCommand.startsWith('define ')) {
+                const word = lowerCommand.replace('define ', '').trim();
+                if (!word) {
+                    return "What word would you like me to define? Please provide the word. 📖";
+                }
+                return await getGeminiResponse(`Define the word "${word}".`);
+            }
+            if (lowerCommand.includes('tell me a joke')) {
+                return randomChoice(jokes);
+            }
+            const randomNumberMatch = lowerCommand.match(/generate random number (\d+) to (\d+)/);
+            if (randomNumberMatch) {
+                const min = parseInt(randomNumberMatch[1]);
+                const max = parseInt(randomNumberMatch[2]);
+                if (!isNaN(min) && !isNaN(max) && min <= max) {
+                    return `Here's a random number between ${min} and ${max}: ${Math.floor(Math.random() * (max - min + 1)) + min}. 🎲`;
+                } else {
+                    return "Please provide a valid range for random number generation (e.g., 'generate random number 1 to 100'). 🔢";
+                }
+            }
+
+            // --- Personal Memory ---
+            const rememberMatch = lowerCommand.match(/remember (?:that )?(?:my )?(.+?) is (.+)/);
+            if (rememberMatch) {
+                const key = rememberMatch[1].trim();
+                const value = rememberMatch[2].trim();
+                userMemory[key] = value;
+                saveUserMemory();
+                return `Okay, I'll remember that your ${key} is ${value}. 🧠✔️`;
+            }
+
+            const recallMatch = lowerCommand.match(/(?:what is my|what did i tell you about)\s*(?:my )?(.+?)\??$/);
+            if (recallMatch) {
+                const key = recallMatch[1].trim();
+                if (userMemory[key]) {
+                    return `You told me your ${key} is ${userMemory[key]}. 🤔`;
+                } else {
+                    return `I don't seem to have anything remembered about your ${key}. 🤷‍♀️`;
+                }
+            }
+
+            const forgetMatch = lowerCommand.match(/(?:forget my|forget that)\s*(?:my )?(.+?)$/);
+            if (forgetMatch) {
+                const key = forgetMatch[1].trim();
+                if (userMemory[key]) {
+                    delete userMemory[key];
+                    saveUserMemory();
+                    return `Okay, I've forgotten about your ${key}. 🗑️`;
+                } else {
+                    return `I don't have anything remembered about your ${key} to forget. 🚫`;
+                }
+            }
+
+            // --- Disaster Preparedness & Response ---
+            if (lowerCommand.includes('disaster profile') || lowerCommand.includes('disasters in') || lowerCommand.includes('risks in')) {
+                const divisionQuery = extractDivisionName(lowerCommand);
+                if (divisionQuery) {
+                    const profile = disaster_profiles_data[divisionQuery];
+                    if (profile) {
+                        return `**${profile.name} Disaster Profile:** 🚨\n\n**Common Disasters:** ${profile.commonDisasters}\n**Past History:** ${profile.pastHistory}\n**Awareness:** ${profile.awareness}`;
+                    } else {
+                        return `Sorry, I don't have a detailed disaster profile for "${divisionQuery}". Please try one of these: Sylhet, Rajshahi, Dhaka, Chittagong, Khulna, Barisal, Mymensingh, Rangpur. 📍`;
+                    }
+                } else {
+                    return "Please tell me which division you want the disaster profile for. For example, 'disaster profile for Sylhet' or 'risks in Dhaka'. 🗺️";
+                }
+            }
+
+            if (lowerCommand.includes('shelters in') || lowerCommand.includes('find shelters') || lowerCommand.includes('where are shelters') || lowerCommand.includes('list shelters')) {
+                const locationQuery = extractDivisionName(lowerCommand); // Reusing for location
+                if (locationQuery) {
+                    const filteredShelters = shelter_data.filter(s =>
+                        s.division.toLowerCase().includes(locationQuery) ||
+                        s.district.toLowerCase().includes(locationQuery)
+                    );
+                    if (filteredShelters.length > 0) {
+                        let response = `Here are shelters in ${locationQuery}: 🏠\n\n`;
+                        filteredShelters.forEach(s => {
+                            response += `**${s.name}**\n- Division: ${s.division}\n- District: ${s.district}\n- Capacity: ${s.capacity} 👥\n- Status: ${s.status} ${s.status === 'Available' ? '✅' : s.status === 'Filling Up' ? '🟡' : '🔴'}\n- Facilities: ${s.facilities}\n\n`;
+                        });
+                        return response;
+                    } else {
+                        return `Sorry, I couldn't find any shelters in "${locationQuery}". 😔`;
+                    }
+                } else {
+                    return "Please tell me the division or district you want to find shelters in. For example, 'shelters in Dhaka' or 'find shelters near Cox\'s Bazar'. 📍";
+                }
+            }
+
+            const emergencyContactMatch = lowerCommand.match(/(emergency contact for|contact for|phone number for|helpline for)\s*(.+)$/);
+            if (emergencyContactMatch) {
+                const contactQuery = emergencyContactMatch[2].trim().toLowerCase();
+                if (!contactQuery) {
+                    return "What emergency service or location are you looking for a contact number for? For example, 'emergency contact for National Helpline' or 'phone number for fire service'. 📞";
+                }
+                const foundContact = emergency_contacts_data.find(c =>
+                    c.service.toLowerCase().includes(contactQuery) ||
+                    c.division.toLowerCase().includes(contactQuery) ||
+                    c.district.toLowerCase().includes(contactQuery)
+                );
+                if (foundContact) {
+                    return `The emergency contact for **${foundContact.service}** in ${foundContact.division} (${foundContact.district}) is: **${foundContact.number}**. Notes: ${foundContact.notes}. ☎️`;
+                } else {
+                    return `Sorry, I couldn't find an emergency contact for "${contactQuery}". Try asking for "National Helpline", "Fire Service", or "Police in Sylhet". 🤷‍♀️`;
+                }
+            }
+            if (lowerCommand.match(/^(real-time map status|describe the map)$/)) {
+                return "The real-time map visualizes disaster-affected areas (Red/Yellow/Green) 🔴🟡🟢, population data 👥, relief demand/supply 📦, and unreached zones. You can imagine clicking on areas for detailed status updates. 🗺️";
+            }
+
+            // --- Health & Safety ---
+            if (lowerCommand.match(/^(health monitoring|check my health|my vitals|health check)$/)) {
+                return handleHealthMonitor();
+            }
+            if (lowerCommand.includes('my heart rate is') && lowerCommand.includes('oxygen')) {
+                return parseHealthInput(lowerCommand);
+            }
+            if (lowerCommand.startsWith('rescue help for ')) {
+                const disaster = lowerCommand.replace('rescue help for ', '').trim();
+                if (!disaster) {
+                    return "Which disaster are you asking for rescue help for? For example, 'rescue help for earthquake' or 'help for flood'. 🆘";
+                }
+                if (rescue_knowledge_base[disaster]) {
+                    return rescue_knowledge_base[disaster] + " 🚨";
+                } else {
+                    return `I can provide rescue help for common disasters like earthquake 🌍, flood 🌊, fire 🔥, tornado 🌪️, cyclone 🌀, or landslide ⛰️. What specific disaster are you asking about?`;
+                }
+            }
+            if (lowerCommand.includes('first aid for') || lowerCommand.includes('help for') || lowerCommand.includes('what to do for')) {
+                const condition = extractDiseaseName(lowerCommand, first_aid_info); // Reusing disease extractor
+                if (condition) {
+                    if (first_aid_info[condition]) {
+                        return addMedicalDisclaimer(first_aid_info[condition] + " 🩹");
+                    } else {
+                        return addMedicalDisclaimer(`I have first aid information for cuts 🔪, burns 🔥, fractures 🦴, choking 😵, bleeding 🩸, and snake bites 🐍. What specific condition are you asking about?`);
+                    }
+                } else {
+                    return "What injury or condition are you looking for first aid for? For example, 'first aid for cuts' or 'what to do for a burn'. 🩹";
+                }
+            }
+            if (lowerCommand.includes('treatment of') || lowerCommand.includes('cure for') || lowerCommand.includes('how to treat')) {
+                const disease = extractDiseaseName(lowerCommand, diseases_info);
+                if (disease) {
+                    if (diseases_info[disease]) {
+                        return addMedicalDisclaimer(diseases_info[disease] + " 💊");
+                    } else {
+                        return addMedicalDisclaimer(`I have information on common diseases like cold 🤧, flu 😷, fever 🤒, malaria 🦟, dengue 🦟, diarrhea 🚽, and cholera 🤢. What disease are you asking about?`);
+                    }
+                } else {
+                    return "What disease are you asking about treatment for? For example, 'treatment of cold' or 'how to treat dengue'. 💊";
+                }
+            }
+            if (lowerCommand.match(/^(find a doctor|doctor profiles|doctors available)$/)) {
+                return getDoctorProfiles();
+            }
+
+            // --- Agriculture & Crops ---
+            if (lowerCommand.includes('crop problem') || lowerCommand.includes('my plant has') || lowerCommand.includes('what\'s wrong with my crops') || lowerCommand.includes('diagnose crop problem')) {
+                const disease = extractDiseaseName(lowerCommand, crop_diseases_info);
+                if (disease) {
+                    if (crop_diseases_info[disease]) {
+                        return crop_diseases_info[disease] + " 🐛🌾";
+                    } else {
+                        return `I have information on crop problems like blight 🍂, rust 🟠, aphids 🐞, leaf spot 🍁, and root rot 🪱. I don't have specific details for "${disease}". 🤷‍♀️`;
+                    }
+                } else {
+                    return "To help identify a crop problem, please describe the symptoms you are observing, such as discoloration, spots, wilting, or pests. You can also mention the type of crop. For example, 'crop problem blight' or 'my plant has yellow leaves'. 🧐🌱";
+                }
+            }
+            const cropSuggestionMatch = lowerCommand.match(/(?:suggest|recommend) crops for (\d+)(?:%| percent)? (?:loss|damage) and (\w+) soil/);
+            if (cropSuggestionMatch) {
+                const cropLoss = cropSuggestionMatch[1];
+                const soilType = cropSuggestionMatch[2];
+                if (cropLoss && soilType) {
+                    return await getAgriculturalAiSuggestion(cropLoss, soilType);
+                } else {
+                    return "To suggest crops, please specify the estimated crop loss percentage and soil type (e.g., 'suggest crops for 70% loss and clay soil'). 🌾🌱";
+                }
+            }
+
+
+            // --- System/App Interaction (Simulated) ---
+            if (lowerCommand.includes('open whatsapp')) {
+                return "Opening WhatsApp Web... (Simulated action) 📱💬";
+            }
+            if (lowerCommand.includes('open youtube')) {
+                return "Opening YouTube... (Simulated action) 📺▶️";
+            }
+            if (lowerCommand.includes('open google')) {
+                return "Opening Google... (Simulated action) 🌐🔍";
+            }
+
+
+            // --- Calculations ---
+            if (isCalculation(lowerCommand)) {
+                try {
+                    const expression = lowerCommand.replace(/^(what is|calculate)\s+/, '').replace(/\?$/, '').trim();
+                    const result = new Function('return ' + expression)();
+                    return `The result is: ${result}. 🔢`;
+                } catch (e) {
+                    return "Sorry, I couldn't perform that calculation. Please ensure it's a valid mathematical expression (e.g., '2+2', '5*8', '10/2'). ✖️";
+                }
+            }
+
+            // --- Mode Switching ---
+            if (lowerCommand.match(/^(activate voice|switch to voice)$/)) {
+                if (currentMode === 'voice') {
+                    return "I'm already in voice mode. Please speak your command. 🎤";
+                }
+                currentMode = 'voice';
+                voiceButton.textContent = 'Stop Listening';
+                chatInput.placeholder = 'Speak your message...';
+                startVoiceRecognition();
+                return "Switched to voice mode. Please speak now. 🎤✨";
+            }
+            if (lowerCommand.match(/^(switch to chat|enable chat)$/)) {
+                if (currentMode === 'chat') {
+                    return "I'm already in chat mode. Please type your message. 💬";
+                }
+                currentMode = 'chat';
+                voiceButton.textContent = 'Voice';
+                chatInput.placeholder = 'Type your message...';
+                if (isListening) {
+                    stopVoiceRecognition();
+                }
+                return "Switched to chat mode. ⌨️";
+            }
+
+            // --- Generative/Creative tasks (handled by Gemini) ---
+            if (lowerCommand.startsWith('write a paragraph on ') ||
+                lowerCommand.startsWith('compose an email ') ||
+                lowerCommand.startsWith('write a dialogue between ') ||
+                lowerCommand.startsWith('explain ') ||
+                lowerCommand.startsWith('summarize ')) {
+                const queryContent = lowerCommand.split(' ').slice(3).join(' ').trim(); // Basic extraction
+                if (!queryContent) {
+                    return `What topic would you like me to ${lowerCommand.split(' ')[0]}? Please specify. ✍️`;
+                }
+                return await getGeminiResponse(command);
+            }
+
+
+            // --- Default response using Gemini for unhandled commands ---
+            // If no specific command is matched, try to get a general response from Gemini.
+            const geminiResponse = await getGeminiResponse(command);
+            if (geminiResponse && !geminiResponse.includes("Sorry, I couldn't get a clear response from my knowledge base.")) {
+                 return geminiResponse;
+            } else {
+                return "I'm still learning to understand more complex and varied requests. Could you please try rephrasing that, or ask me something from the list of commands I can perform? You can type 'help' to see my capabilities. 🤔💡";
+            }
+        }
+
+        // --- Event Listeners ---
+
+        /**
+         * Handles sending a message, either by pressing Enter or clicking the Send button.
+         */
+        async function sendMessage() {
+            const userMessage = chatInput.value.trim();
+            
+            // If there's no message, do nothing
+            if (userMessage === '') {
+                return;
+            }
+
+            // Add user message to chat
+            addMessageToChat(userMessage, 'user'); // This adds to history and displays
+            chatInput.value = '';
+            showLoadingIndicator(true);
+
+            try {
+                const botResponse = await processCommand(userMessage);
+                addMessageToChat(botResponse, 'bot'); // This adds to history and displays
+            } catch (error) {
+                console.error('Error processing command:', error);
+                addMessageToChat("Oops! Something went wrong while processing your request. Please try again. 😔🛠️", 'bot');
+            } finally {
+                showLoadingIndicator(false);
+            }
+        }
+
+        // --- Sidebar Toggle Logic ---
+        function toggleSidebar() {
+            sidebar.classList.toggle('open');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+        }
+
+        // Event Listener Assignments
+        messageBoxCloseButton.addEventListener('click', hideMessageBox);
+        sendButton.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Sidebar Buttons
+        hamburgerButton.addEventListener('click', toggleSidebar);
+        closeSidebarButton.addEventListener('click', closeSidebar);
+        newChatButton.addEventListener('click', () => {
+            startNewChat();
+            closeSidebar(); // Close sidebar after starting new chat
+        });
+        clearChatButton.addEventListener('click', () => {
+            clearCurrentChat();
+            closeSidebar(); // Close sidebar after clearing chat
+        });
+        settingsButtonSidebar.addEventListener('click', () => {
+            settingsModalOverlay.style.display = 'flex';
+            closeSidebar(); // Close sidebar when settings open
+        });
+        voiceButton.addEventListener('click', () => {
+            // Toggle voice mode
+            if (currentMode === 'chat') {
+                currentMode = 'voice';
+                voiceButton.textContent = 'Stop Listening';
+                chatInput.placeholder = 'Speak your message...';
+                startVoiceRecognition();
+            } else {
+                currentMode = 'chat';
+                voiceButton.textContent = 'Voice';
+                chatInput.placeholder = 'Type your message...';
+                if (isListening) {
+                    stopVoiceRecognition();
+                }
+            }
+            closeSidebar(); // Close sidebar after voice button click
+        });
+
+
+        // --- Search Functionality ---
+        searchInput.addEventListener('input', (event) => {
+            const query = event.target.value.toLowerCase();
+            const currentConv = conversations.find(conv => conv.id === currentConversationId);
+            chatMessages.innerHTML = ''; // Clear current display
+
+            if (currentConv && currentConv.messages) {
+                currentConv.messages.forEach(msg => {
+                    if (query === '' || msg.parts[0].text.toLowerCase().includes(query)) {
+                        addMessageToChat(msg.parts[0].text, msg.role, true);
+                    }
+                });
+            }
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        });
+
+
+        // --- Theme Switching Logic (from settings modal) ---
+        function applyTheme(themeName) {
+            document.body.className = `antialiased theme-${themeName}`;
+            localStorage.setItem('theme', themeName); // Save theme preference
+            // Special handling for fonts based on theme
+            if (themeName === 'f1') {
+                document.documentElement.style.setProperty('--font-family-main', "'Orbitron', sans-serif");
+            } else if (themeName === 'space') {
+                document.documentElement.style.setProperty('--font-family-main', "'Space Grotesk', sans-serif");
+            } else if (themeName === 'genz') {
+                document.documentElement.style.setProperty('--font-family-main', "'Poppins', sans-serif");
+            }
+            else {
+                document.documentElement.style.setProperty('--font-family-main', "'Inter', sans-serif");
+            }
+        }
+
+        // Theme switcher button inside settings modal
+        themeSwitcherButton.addEventListener('click', () => {
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            applyTheme(themes[currentThemeIndex]);
+        });
+
+        // --- Settings Modal Logic ---
+        settingsModalClose.addEventListener('click', () => {
+            settingsModalOverlay.style.display = 'none';
+        });
+
+        // Close modal if clicking outside content
+        settingsModalOverlay.addEventListener('click', (event) => {
+            if (event.target === settingsModalOverlay) {
+                settingsModalOverlay.style.display = 'none';
+            }
+        });
+
+        // Master Volume Control
+        masterVolumeSlider.addEventListener('input', (event) => {
+            masterVolume = event.target.value;
+            volumeValueSpan.textContent = `${masterVolume}%`;
+            localStorage.setItem('masterVolume', masterVolume); // Save volume preference
+            // In a real app, you'd adjust an AudioContext gain node or similar here
+            console.log(`Master Volume set to: ${masterVolume}%`);
+        });
+
+
+        // --- Voice Recognition (Web Speech API) ---
+
+        /**
+         * Initializes and starts voice recognition.
+         */
+        function startVoiceRecognition() {
+            if (!('webkitSpeechRecognition' in window)) {
+                showMessageBox('Browser Not Supported', 'Sorry, your browser does not support Web Speech API. Please use Google Chrome for voice functionality. 🌐🗣️');
+                voiceButton.disabled = true;
+                return;
+            }
+
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = false; // Only capture one phrase at a time
+            recognition.interimResults = false; // Only return final results
+            recognition.lang = 'en-US'; // Set language
+
+            recognition.onstart = () => {
+                isListening = true;
+                voiceButton.textContent = 'Stop Listening';
+                chatInput.placeholder = 'Listening... 👂';
+                chatInput.disabled = true;
+                sendButton.disabled = true;
+                showLoadingIndicator(true); // Indicate listening
+                loadingIndicator.textContent = 'Listening... 🎤';
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                chatInput.value = transcript;
+                sendMessage(); // Send the transcribed message
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                showMessageBox('Voice Error', `Speech recognition error: ${event.error}. Please try again. 🎙️❌`);
+                isListening = false;
+                voiceButton.textContent = 'Voice';
+                chatInput.placeholder = 'Type your message...';
+                chatInput.disabled = false;
+                sendButton.disabled = false;
+                showLoadingIndicator(false);
+            };
+
+            recognition.onend = () => {
+                isListening = false;
+                if (currentMode === 'voice') { // Only reset if still in voice mode
+                    voiceButton.textContent = 'Voice'; // Changes back to "Voice" after speaking
+                    chatInput.placeholder = 'Speak your message...';
+                } else {
+                    chatInput.placeholder = 'Type your message...';
+                }
+                chatInput.disabled = false;
+                sendButton.disabled = false;
+                showLoadingIndicator(false);
+            };
+
+            recognition.start();
+        }
+
+        /**
+         * Stops voice recognition.
+         */
+        function stopVoiceRecognition() {
+            if (recognition && isListening) {
+                recognition.stop();
+            }
+        }
+
+
+        // Initial setup on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme && themes.includes(savedTheme)) {
+                currentThemeIndex = themes.indexOf(savedTheme);
+                applyTheme(savedTheme);
+            } else {
+                applyTheme(themes[0]); // Apply default 'professional' theme
+            }
+
+            // Load saved volume
+            const savedVolume = localStorage.getItem('masterVolume');
+            if (savedVolume !== null) {
+                masterVolume = parseInt(savedVolume);
+                masterVolumeSlider.value = masterVolume;
+                volumeValueSpan.textContent = `${masterVolume}%`;
+            }
+
+            loadUserMemory(); // Load user memory
+
+            // Load conversations or start a new one
+            if (!loadConversations()) {
+                startNewChat(); // Start a new chat if no history
+            } else {
+                // If conversations were loaded, ensure the greeting is shown for the current chat
+                // unless it already has messages (prevents duplicate greetings on refresh)
+                const currentConv = conversations.find(conv => conv.id === currentConversationId);
+                if (!currentConv || currentConv.messages.length === 0) {
+                    addMessageToChat(getGreeting() + ", I'm XaioninAI, your AI assistant for global readiness and daily assistance. How can I help you today? 👋🤖", 'bot', true);
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
